@@ -218,12 +218,23 @@
 
         </div>
 
+
+        <div id="selection-alert" class="alert-error" style="display:none;">
+            Debes seleccionar una opción antes de continuar.
+        </div>
+
+        <div class="wizard-footer">
+            <button type="submit" class="btn btn-primary btn-lg" id="btn-next">
+                Siguiente →
+            </button>
+        </div>
+        <!--
         <div class="wizard-footer">
             <button type="submit" class="btn btn-primary btn-lg" id="btn-next" disabled>
                 Siguiente →
             </button>
         </div>
-
+    -->
     </form>
 
 </div>

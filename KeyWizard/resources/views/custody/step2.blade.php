@@ -277,45 +277,88 @@
 
 @push('scripts')
 <script>
-    let total     = {{ old('total_keys', 3) }};
-    let threshold = {{ old('threshold', 2) }};
+    let total = @json(old('total_keys', 3));
+    let threshold = @json(old('threshold', 2));
 
-    const totalDisplay     = document.getElementById('total-display');
+    const totalDisplay = document.getElementById('total-display');
     const thresholdDisplay = document.getElementById('threshold-display');
-    const totalInput       = document.getElementById('total_keys_input');
-    const thresholdInput   = document.getElementById('threshold_input');
-    const previewThreshold = document.getElementById('preview-threshold');
-    const previewTotal     = document.getElementById('preview-total');
-    const lockVisual       = document.getElementById('lock-visual');
 
-    function clamp(val, min, max) {
-        return Math.min(Math.max(val, min), max);
+    const totalInput = document.getElementById('total_keys_input');
+    const thresholdInput = document.getElementById('threshold_input');
+
+    const previewThreshold = document.getElementById('preview-threshold');
+    const previewTotal = document.getElementById('preview-total');
+
+    const lockVisual = document.getElementById('lock-visual');
+
+    function clamp(value, min, max) {
+        return Math.min(Math.max(value, min), max);
     }
 
     function updateUI() {
-        threshold = clamp(threshold, 1, total);
-        total     = clamp(total, 1, 15);
+        // Total permitido: 1 a 15
+        total = clamp(total, 1, 15);
 
-        totalDisplay.textContent     = total;
+        // Threshold permitido: 1 a total
+        threshold = clamp(threshold, 1, total);
+
+        totalDisplay.textContent = total;
         thresholdDisplay.textContent = threshold;
-        totalInput.value             = total;
-        thresholdInput.value         = threshold;
+
+        totalInput.value = total;
+        thresholdInput.value = threshold;
+
         previewThreshold.textContent = threshold;
-        previewTotal.textContent     = total;
+        previewTotal.textContent = total;
 
         lockVisual.innerHTML = '';
+
         for (let i = 1; i <= total; i++) {
             const key = document.createElement('div');
-            key.className = 'lock-key' + (i <= threshold ? ' active' : '');
+
+            key.className =
+                'lock-key' + (i <= threshold ? ' active' : '');
+
             key.textContent = '🔑';
+
             lockVisual.appendChild(key);
         }
     }
 
-    document.getElementById('total-plus').addEventListener('click',      () => { total++;     updateUI(); });
-    document.getElementById('total-minus').addEventListener('click',     () => { total--;     updateUI(); });
-    document.getElementById('threshold-plus').addEventListener('click',  () => { threshold++; updateUI(); });
-    document.getElementById('threshold-minus').addEventListener('click', () => { threshold--; updateUI(); });
+    document.getElementById('total-plus').addEventListener('click', () => {
+        if (total < 15) {
+            total++;
+            updateUI();
+        }
+    });
+
+    document.getElementById('total-minus').addEventListener('click', () => {
+        if (total > 1) {
+            total--;
+
+            // Si threshold quedó mayor que total,
+            // se ajusta automáticamente.
+            if (threshold > total) {
+                threshold = total;
+            }
+
+            updateUI();
+        }
+    });
+
+    document.getElementById('threshold-plus').addEventListener('click', () => {
+        if (threshold < total) {
+            threshold++;
+            updateUI();
+        }
+    });
+
+    document.getElementById('threshold-minus').addEventListener('click', () => {
+        if (threshold > 1) {
+            threshold--;
+            updateUI();
+        }
+    });
 
     updateUI();
 </script>
