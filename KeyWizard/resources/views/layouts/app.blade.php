@@ -70,6 +70,66 @@
         });
     });
 </script>
+<canvas id="particles-bg" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;"></canvas>
+
+<script>
+(function(){
+  const canvas = document.getElementById('particles-bg');
+  const ctx = canvas.getContext('2d');
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const sparks = Array.from({length: 80}, () => resetSpark({}));
+
+  function resetSpark(s) {
+    s.x = Math.random() * window.innerWidth;
+    s.y = window.innerHeight + 10;
+    s.vx = (Math.random() - 0.5) * 0.8;
+    s.vy = -(Math.random() * 1.4 + 0.4);
+    s.life = Math.random() * 0.6 + 0.4;
+    s.maxLife = s.life;
+    s.r = Math.random() * 2.5 + 0.8;
+    s.hue = [267, 280, 300, 250, 220][Math.floor(Math.random() * 5)];
+    return s;
+  }
+
+  function frame() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    sparks.forEach(s => {
+      s.y += s.vy;
+      s.x += s.vx;
+      s.life -= 0.003;
+
+      if (s.life <= 0) resetSpark(s);
+
+      const progress = s.life / s.maxLife;
+      const alpha = progress * 0.75;
+
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r * progress, 0, Math.PI * 2);
+      ctx.fillStyle = `hsla(${s.hue}, 85%, 50%, ${alpha})`;
+      ctx.fill();
+
+      if (progress > 0.4) {
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r * 3.5 * progress, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(${s.hue}, 80%, 55%, ${alpha * 0.18})`;
+        ctx.fill();
+      }
+    });
+
+    requestAnimationFrame(frame);
+  }
+
+  frame();
+})();
+</script>
 
 </body>
 </html>
