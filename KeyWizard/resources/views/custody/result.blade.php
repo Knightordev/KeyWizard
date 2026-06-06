@@ -392,6 +392,24 @@
         color: var(--text-muted);
         line-height: 1.6;
     }
+
+    .result-config-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--purple-dim);
+        border: 1px solid var(--purple-border);
+        border-radius: 99px;
+        padding: 6px 16px;
+        font-size: 13px;
+        color: var(--purple);
+        margin-bottom: 1rem;
+        font-family: 'DM Mono', monospace;
+    }
+
+    .pill-divider {
+        opacity: 0.4;
+    }
 </style>
 @endpush
 
@@ -404,8 +422,26 @@
             ✓ Descriptor generado correctamente
         </div>
         <h1>Tu bóveda está <span>lista</span></h1>
+
+        <div class="result-config-pill">
+            @php
+                $purposes = [
+                    'personal'    => '👤 Personal',
+                    'family'      => '👨‍👩‍👧 Familiar',
+                    'business'    => '🏢 Negocio',
+                    'savings'     => '🏦 Ahorro',
+                    'inheritance' => '🤝 Herencia',
+                ];
+            @endphp
+            <span>{{ $purposes[$data['purpose']] ?? $data['purpose'] }}</span>
+            <span class="pill-divider">·</span>
+            <span>{{ $data['threshold'] }} de {{ $data['total_keys'] }} llaves</span>
+            <span class="pill-divider">·</span>
+            <span>{{ $data['score']['label'] }}</span>
+        </div>
+
         <p>Copia tu descriptor e impórtalo en Sparrow o Liana para activar tu custodia multifirma.</p>
-    </div>
+</div>
 
     <div class="descriptor-card">
         <div class="descriptor-header">

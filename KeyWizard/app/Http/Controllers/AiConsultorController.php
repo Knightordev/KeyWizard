@@ -33,12 +33,23 @@ class AiConsultorController extends Controller
         $config = $request->config;
 
         session([
-            'custody.purpose'    => $config['purpose']    ?? 'personal',
-            'custody.total_keys' => (int) ($config['total_keys'] ?? 3),
-            'custody.threshold'  => (int) ($config['threshold']  ?? 2),
-            'custody.xpubs'      => [],
+            'custody.purpose'      => $config['purpose']    ?? 'personal',
+            'custody.total_keys'   => (int) ($config['total_keys'] ?? 3),
+            'custody.threshold'    => (int) ($config['threshold']  ?? 2),
+            'custody.xpubs'        => [],
+            'custody.from_ai'      => true,
+            'custody.ai_recommendation' => $config['recommendation'] ?? '',
         ]);
 
-        return response()->json(['redirect' => route('wizard.step3')]);
+        return response()->json(['redirect' => route('ai.bridge')]);
+    }
+
+    public function bridge()
+    {
+        if (!session('custody.from_ai')) {
+            return redirect()->route('wizard.step1');
+        }
+
+        return view('custody.ai_bridge');
     }
 }

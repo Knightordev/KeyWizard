@@ -589,48 +589,57 @@
 
 @push('scripts')
 <script>
-
-    document.querySelectorAll('.device-tab').forEach(tab => {
-        tab.addEventListener('click', () => {
-            document.querySelectorAll('.device-tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.device-content').forEach(c => c.classList.remove('active'));
-            tab.classList.add('active');
-            document.getElementById('guide-' + tab.dataset.device).classList.add('active');
-        });
-    });
-    const totalKeys = {{ $totalKeys }};
+const totalKeys = {{ $totalKeys }};
+    const inputs    = [];
 
     for (let i = 0; i < totalKeys; i++) {
-        const input  = document.getElementById('xpub-' + i);
-        const item   = document.getElementById('xpub-item-' + i);
-        const status = document.getElementById('status-' + i);
+        inputs.push(document.getElementById('xpub-' + i));
+    }
 
-        input.addEventListener('input', () => {
-            const val = input.value.trim();
+    function validateAll() {
+        const values = inputs.map(input => input.value.trim());
+
+        inputs.forEach((input, i) => {
+            const item   = document.getElementById('xpub-item-' + i);
+            const status = document.getElementById('status-' + i);
+            const val    = values[i];
 
             if (val.length === 0) {
-                item.className   = 'xpub-item';
-                status.className = 'xpub-status';
+                item.className     = 'xpub-item';
+                status.className   = 'xpub-status';
                 status.textContent = 'pendiente';
                 return;
             }
 
-            const valid = /^(xpub|ypub|zpub)[a-zA-Z0-9]{100,}$/.test(val);
+            const validFormat = /^(xpub|ypub|zpub)[a-zA-Z0-9]{100,}$/.test(val);
 
-            if (valid) {
-                item.className   = 'xpub-item valid';
-                status.className = 'xpub-status ok';
-                status.textContent = '✓ válida';
-            } else {
-                item.className   = 'xpub-item error';
-                status.className = 'xpub-status err';
+            if (!validFormat) {
+                item.className     = 'xpub-item error';
+                status.className   = 'xpub-status err';
                 status.textContent = '✗ formato inválido';
+                return;
             }
-        });
 
-        if (input.value.trim().length > 0) {
-            input.dispatchEvent(new Event('input'));
-        }
+            const isDuplicate = values.some((v, j) => j !== i && v === val && v.length > 0);
+
+            if (isDuplicate) {
+                item.className     = 'xpub-item error';
+                status.className   = 'xpub-status err';
+                status.textContent = '✗ duplicada';
+                return;
+            }
+
+            item.className     = 'xpub-item valid';
+            status.className   = 'xpub-status ok';
+            status.textContent = '✓ válida';
+        });
     }
+
+    inputs.forEach(input => {
+        input.addEventListener('input', validateAll);
+        if (input.value.trim().length > 0) {
+            validateAll();
+        }
+    });
 </script>
 @endpush
