@@ -566,7 +566,35 @@
                     </div>
                 </div>
             </div>
+            @elseif($purpose === 'taproot')
+            <div class="timelock-info" style="border-color:rgba(240,165,0,0.2);background:rgba(240,165,0,0.04);">
+                <div class="timelock-header" style="color:#f0a500;">⚡ Taproot — El formato más moderno de Bitcoin</div>
+                <div class="timelock-grid">
+                    <div class="timelock-item">
+                        <div class="timelock-icon">🔒</div>
+                        <div>
+                            <div class="timelock-label">Privacidad máxima</div>
+                            <div class="timelock-desc">Las condiciones de gasto (multisig, timelocks) son invisibles on-chain. Solo se revela lo que se usa al gastar.</div>
+                        </div>
+                    </div>
+                    <div class="timelock-item">
+                        <div class="timelock-icon">⚡</div>
+                        <div>
+                            <div class="timelock-label">Comisiones menores</div>
+                            <div class="timelock-desc">Las transacciones Taproot son más pequeñas y baratas que las P2WSH tradicionales.</div>
+                        </div>
+                    </div>
+                    <div class="timelock-item">
+                        <div class="timelock-icon">🛠️</div>
+                        <div>
+                            <div class="timelock-label">Compatible con Sparrow 1.8+</div>
+                            <div class="timelock-desc">Importa el descriptor en Sparrow Wallet versión 1.8 o superior. Asegúrate de tener la versión actualizada.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             @endif
+            
         </div>
     </div>
 

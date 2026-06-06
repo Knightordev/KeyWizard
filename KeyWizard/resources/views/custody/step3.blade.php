@@ -508,6 +508,46 @@
         margin-top: 6px;
         font-family: 'DM Mono', monospace;
     }
+    .taproot-card {
+        border-color: rgba(240,165,0,0.2) !important;
+    }
+
+    .taproot-card.selected {
+        border-color: rgba(240,165,0,0.5) !important;
+        background: rgba(240,165,0,0.05) !important;
+    }
+
+    .taproot-internal-card {
+        background: rgba(240,165,0,0.05);
+        border: 1px solid rgba(240,165,0,0.2);
+        border-radius: var(--radius);
+        padding: 1.25rem 1.5rem;
+        margin-bottom: 1.25rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .taproot-internal-header {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        font-size: 18px;
+    }
+
+    .taproot-internal-title {
+        font-family: 'Syne', sans-serif;
+        font-size: 14px;
+        font-weight: 700;
+        color: #f0a500;
+        margin-bottom: 3px;
+    }
+
+    .taproot-internal-sub {
+        font-size: 12px;
+        color: var(--text-muted);
+        line-height: 1.5;
+    }
 </style>
 @endpush
 
@@ -778,6 +818,30 @@
                 <div class="xpub-meta-info" id="meta-info-{{ $i }}"></div>
             </div>
             @endfor
+            @if(session('custody.purpose') === 'taproot')
+            <div class="taproot-internal-card">
+                <div class="taproot-internal-header">
+                    <span>⚡</span>
+                    <div>
+                        <div class="taproot-internal-title">Clave interna Taproot</div>
+                        <div class="taproot-internal-sub">Taproot requiere una clave interna adicional que actúa como raíz del árbol de scripts.</div>
+                    </div>
+                </div>
+                <input
+                    type="text"
+                    name="taproot_internal"
+                    class="xpub-meta-input"
+                    style="width:100%;padding:10px 14px;font-size:12px;margin-top:0.75rem;"
+                    placeholder="xpub... (clave interna, puede ser la misma que tu llave principal)"
+                    spellcheck="false"
+                    autocomplete="off"
+                    value="{{ old('taproot_internal') }}"
+                >
+                <div style="font-size:12px;color:var(--text-dim);margin-top:6px;font-family:'DM Mono',monospace;">
+                    Puedes usar la misma xpub de tu dispositivo principal si no tienes una dedicada.
+                </div>
+            </div>
+            @endif
         </div>
 
         <div class="wizard-footer">

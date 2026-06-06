@@ -20,7 +20,7 @@ class CustodyController extends Controller
     public function saveStep1(Request $request)
     {
         $request->validate([
-            'purpose' => 'required|in:personal,family,business,savings,inheritance,savings_lock',
+            'purpose' => 'required|in:personal,family,business,savings,inheritance,savings_lock,taproot',
         ]);
 
         session(['custody.purpose' => $request->purpose]);
@@ -36,7 +36,7 @@ class CustodyController extends Controller
 
         $purpose = session('custody.purpose');
 
-        if (in_array($purpose, ['inheritance', 'savings_lock'])) {
+        if (in_array($purpose, ['inheritance', 'savings_lock', 'taproot'])) {
             session([
                 'custody.total_keys' => 2,
                 'custody.threshold'  => 1,
@@ -106,11 +106,15 @@ class CustodyController extends Controller
             session(['custody.lock_block' => (int) $request->lock_block]);
         }
 
+        if (session('custody.purpose') === 'taproot' && $request->filled('taproot_internal')) {
+            session(['custody.taproot_internal' => trim($request->taproot_internal)]);
+        }
         session([
             'custody.xpubs'        => $xpubs,
             'custody.fingerprints' => $request->input('fingerprints', []),
             'custody.derivations'  => $request->input('derivations', []),
         ]);
+
         session(['custody.xpubs' => $xpubs]);
 
         return redirect()->route('wizard.step4');
@@ -160,6 +164,28 @@ class CustodyController extends Controller
             $block       = session('custody.lock_block', 850000);
             $descriptor  = $builder->buildTimelockAbsolute($xpubs[0], $xpubs[1], $block);
             $descripcion = $builder->describeTimelockAbsolute($block);
+        } else {
+            $descriptor  = $builder->build($threshold, $xpubs);
+            $descripcion = $builder->describe($threshold, $totalKeys);
+        }
+
+        if ($purpose === 'inheritance') {
+            $blocks      = 52560;
+            $descriptor  = $builder->buildTimelockRelative($xpubs[0], $xpubs[1], $blocks);
+            $descripcion = $builder->describeTimelockRelative($blocks);
+        } elseif ($purpose === 'savings_lock') {
+            $block       = session('custody.lock_block', 850000);
+            $descriptor  = $builder->buildTimelockAbsolute($xpubs[0], $xpubs[1], $block);
+            $descripcion = $builder->describeTimelockAbsolute($block);
+        } elseif ($purpose === 'taproot') {
+            $internal = session('custody.taproot_internal', $xpubs[0]);
+            if (count($xpubs) === 1) {
+                $descriptor  = $builder->buildTaprootSingle($xpubs[0]);
+                $descripcion = $builder->describeTaproot('single');
+            } else {
+                $descriptor  = $builder->buildTaprootMulti($internal, $xpubs, $threshold);
+                $descripcion = $builder->describeTaproot('multi');
+            }
         } else {
             $descriptor  = $builder->build($threshold, $xpubs);
             $descripcion = $builder->describe($threshold, $totalKeys);

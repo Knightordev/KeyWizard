@@ -223,7 +223,17 @@
                 <div class="option-title">Ahorro bloqueado</div>
                 <div class="option-desc">Bloquea tus fondos hasta un bloque específico de Bitcoin. Nadie puede moverlos antes. Usa timelock absoluto.</div>
             </label>
-
+            
+            <label class="option-card taproot-card {{ old('purpose') === 'taproot' ? 'selected' : '' }}" for="purpose_taproot" style="grid-column: span 2;">
+                <input type="radio" name="purpose" id="purpose_taproot" value="taproot" {{ old('purpose') === 'taproot' ? 'checked' : '' }}>
+                <div class="option-check"></div>
+                <div class="option-emoji">⚡</div>
+                <div class="option-title">
+                    Taproot
+                    <span style="font-family:'DM Mono',monospace;font-size:10px;background:rgba(240,165,0,0.15);color:#f0a500;padding:2px 8px;border-radius:99px;margin-left:8px;">BONUS</span>
+                </div>
+                <div class="option-desc">El formato más moderno de Bitcoin. Mayor privacidad — las condiciones de gasto son invisibles on-chain. Requiere una clave interna adicional.</div>
+            </label>
         </div>
 
 
