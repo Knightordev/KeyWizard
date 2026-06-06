@@ -589,6 +589,14 @@
 
 @push('scripts')
 <script>
+    document.querySelectorAll('.device-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.device-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.device-content').forEach(c => c.classList.remove('active'));
+            tab.classList.add('active');
+            document.getElementById('guide-' + tab.dataset.device).classList.add('active');
+        });
+    });
 const totalKeys = {{ $totalKeys }};
     const inputs    = [];
 

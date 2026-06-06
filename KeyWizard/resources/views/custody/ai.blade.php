@@ -272,6 +272,22 @@
         justify-content: center;
         margin-top: 1.5rem;
     }
+    .retry-btn {
+        background: rgba(248,113,113,0.08);
+        border: 1px solid rgba(248,113,113,0.2);
+        border-radius: var(--radius-sm);
+        padding: 8px 16px;
+        font-size: 13px;
+        color: #fca5a5;
+        cursor: pointer;
+        transition: all 0.15s;
+        font-family: 'DM Sans', sans-serif;
+    }
+
+    .retry-btn:hover {
+        background: rgba(248,113,113,0.15);
+        border-color: rgba(248,113,113,0.4);
+    }
 </style>
 @endpush
 
@@ -413,7 +429,36 @@
         sendBtn.disabled  = true;
         inputEl.disabled  = true;
     }
+    function addRetryButton() {
+        typingEl.remove();
 
+        const wrap        = document.createElement('div');
+        wrap.className    = 'chat-msg ai';
+        wrap.id           = 'retry-wrap';
+
+        const avatar      = document.createElement('div');
+        avatar.className  = 'chat-avatar';
+        avatar.textContent = '🤖';
+
+        const btn         = document.createElement('button');
+        btn.className     = 'retry-btn';
+        btn.textContent   = '↩ Reintentar';
+        btn.addEventListener('click', () => {
+            wrap.remove();
+            const lastUser = [...history].reverse().find(m => m.role === 'user');
+            if (lastUser) {
+                history = history.filter(m => m !== lastUser);
+                inputEl.value = lastUser.content;
+                sendMessage();
+            }
+        });
+
+        wrap.appendChild(avatar);
+        wrap.appendChild(btn);
+        messagesEl.appendChild(wrap);
+        messagesEl.appendChild(typingEl);
+        scrollBottom();
+    }
     async function sendMessage() {
         const text = inputEl.value.trim();
         if (!text) return;
@@ -450,7 +495,8 @@
 
         } catch (e) {
             hideTyping();
-            addMessage('Hubo un error al conectar con el consultor. Intenta de nuevo.', 'ai');
+            addMessage('⚠️ No pude conectarme en este momento. Verifica tu conexión e inténtalo de nuevo.', 'ai');
+            addRetryButton();
             sendBtn.disabled = false;
         }
 

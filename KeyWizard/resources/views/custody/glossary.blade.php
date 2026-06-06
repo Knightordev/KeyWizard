@@ -854,8 +854,8 @@
             drawerHistory.push({ role: 'assistant', content: text });
 
         } catch (e) {
-            addDrawerMsg('Error al conectar con el asistente.', 'ai');
-        } finally {
+            addDrawerMsg('⚠️ No pude conectarme. Cierra este panel e inténtalo de nuevo.', 'ai');
+        }   finally {
             drawerSend.disabled = false;
             drawerInput.focus();
         }

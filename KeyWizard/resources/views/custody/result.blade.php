@@ -4,6 +4,16 @@
 
 @push('styles')
 <style>
+    @keyframes confetti-fall {
+        0% {
+            transform: translateY(0) rotate(0deg);
+            opacity: 1;
+        }
+        100% {
+            transform: translateY(100vh) rotate(720deg);
+            opacity: 0;
+        }
+    }
     .result-wrap {
         max-width: 680px;
         margin: 0 auto;
@@ -594,6 +604,36 @@
 @push('scripts')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
+    function launchConfetti() {
+        const colors  = ['#a78bfa', '#c4b5fd', '#7c3aed', '#34d399', '#ffffff'];
+        const total   = 80;
+        const container = document.body;
+
+        for (let i = 0; i < total; i++) {
+            const el       = document.createElement('div');
+            el.className   = 'confetti-piece';
+            el.style.cssText = `
+                position: fixed;
+                top: -10px;
+                left: ${Math.random() * 100}vw;
+                width: ${Math.random() * 8 + 4}px;
+                height: ${Math.random() * 8 + 4}px;
+                background: ${colors[Math.floor(Math.random() * colors.length)]};
+                border-radius: ${Math.random() > 0.5 ? '50%' : '2px'};
+                opacity: 1;
+                z-index: 9999;
+                pointer-events: none;
+                animation: confetti-fall ${Math.random() * 2 + 1.5}s ease-in forwards;
+                animation-delay: ${Math.random() * 0.8}s;
+            `;
+            container.appendChild(el);
+            el.addEventListener('animationend', () => el.remove());
+        }
+    }
+
+    window.addEventListener('load', () => {
+        launchConfetti();
+    });
     const descriptor = @json($data['descriptor']);
 
     window.addEventListener('load', () => {
