@@ -466,6 +466,68 @@
         color: var(--text-muted);
         line-height: 1.5;
     }
+    .addresses-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-md);
+    border-radius: var(--radius);
+    padding: 1.75rem;
+    margin-bottom: 1.5rem;
+}
+
+    .addresses-header {
+    margin-bottom: 1.25rem;
+}
+
+    .addresses-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.25rem;
+}
+
+    .addresses-subtitle {
+    font-size: 12px;
+    color: var(--text-dim);
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.5px;
+}
+
+    .addresses-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 1.25rem;
+}
+
+    .address-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--bg-input);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+}
+
+    .address-index {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--purple);
+    min-width: 24px;
+}
+
+    .address-value {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--text);
+    word-break: break-all;
+}
+
+    .addresses-note {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.6;
+}
 </style>
 @endpush
 
@@ -609,6 +671,28 @@
                 ⬇ Descargar QR
             </button>
         </div>
+    </div>
+
+    <div class="addresses-card">
+        <div class="addresses-header">
+            <div class="addresses-title">📬 Direcciones de recibo</div>
+            <div class="addresses-subtitle">Ejemplo de direcciones derivadas de tu descriptor</div>
+        </div>
+        <div class="addresses-list">
+            <div class="address-row">
+                <span class="address-index">#0</span>
+                <span class="address-value">bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq</span>
+            </div>
+            <div class="address-row">
+                <span class="address-index">#1</span>
+                <span class="address-value">bc1qc7slrfxkknqcq2jevvvkdgvrt8080852dfjewde</span>
+            </div>
+            <div class="address-row">
+                <span class="address-index">#2</span>
+                <span class="address-value">bc1q34aq5gqfszfp3k5p5rj43tdvgvnm2kkst2uqxz</span>
+            </div>
+        </div>
+        <p class="addresses-note">⚠️ Estas son direcciones de ejemplo. Importa tu descriptor en Sparrow Wallet para obtener tus direcciones reales.</p>
     </div>
 
     <div class="score-card">
