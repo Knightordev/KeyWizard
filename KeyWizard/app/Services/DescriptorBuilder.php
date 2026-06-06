@@ -91,4 +91,88 @@ class DescriptorBuilder
         if ($score >= 40) return 'Básica';
         return 'Mínima';
     }
+    
+    public function analyzeDescriptor(string $descriptor): array
+    {
+        $descriptor = trim($descriptor);
+        $errors     = [];
+        $info       = [];
+
+        if (empty($descriptor)) {
+            return ['valid' => false, 'errors' => ['El descriptor está vacío.']];
+        }
+
+        $isSingle = str_starts_with($descriptor, 'wpkh(');
+        $isMulti  = str_starts_with($descriptor, 'wsh(multi(');
+
+        if (!$isSingle && !$isMulti) {
+            $errors[] = 'El descriptor debe comenzar con wpkh( o wsh(multi(.';
+        }
+
+        if ($isSingle) {
+            $info['type']       = 'wpkh';
+            $info['type_label'] = 'Custodia simple (1 llave)';
+            $info['threshold']  = 1;
+            $info['total_keys'] = 1;
+            preg_match('/wpkh\(([^)]+)/', $descriptor, $m);
+            $info['xpubs'] = isset($m[1]) ? [$m[1]] : [];
+        }
+
+        if ($isMulti) {
+            $info['type']       = 'wsh_multi';
+            $info['type_label'] = 'Multifirma (multi-llave)';
+            preg_match('/wsh\(multi\((\d+),(.+)\)\)/', $descriptor, $m);
+
+            if (isset($m[1], $m[2])) {
+                $info['threshold']  = (int) $m[1];
+                $rawKeys            = explode(',', $m[2]);
+                $info['xpubs']      = array_map('trim', $rawKeys);
+                $info['total_keys'] = count($info['xpubs']);
+
+                if ($info['threshold'] > $info['total_keys']) {
+                    $errors[] = "El threshold ({$info['threshold']}) es mayor que el total de llaves ({$info['total_keys']}).";
+                }
+
+                if ($info['threshold'] < 1) {
+                    $errors[] = 'El threshold debe ser al menos 1.';
+                }
+            } else {
+                $errors[] = 'No se pudo parsear la estructura multi(threshold, llaves).';
+            }
+        }
+
+        if (!str_contains($descriptor, '/0/*')) {
+            $errors[] = 'Falta la ruta de derivación /0/* en las claves.';
+        }
+
+        $valid = empty($errors);
+
+        $score = [];
+        if ($valid && $isMulti) {
+            $score = $this->securityScore(
+                $info['threshold'],
+                $info['total_keys'],
+                'personal'
+            );
+        } elseif ($valid && $isSingle) {
+            $score = [
+                'score'  => 15,
+                'label'  => 'Mínima',
+                'checks' => [
+                    ['label' => 'Multifirma activa',       'pass' => false],
+                    ['label' => 'Requiere más de 1 firma', 'pass' => false],
+                    ['label' => 'Redundancia de llaves',   'pass' => false],
+                    ['label' => 'Tolerancia a pérdida',    'pass' => false],
+                ],
+            ];
+        }
+
+        return [
+            'valid'  => $valid,
+            'errors' => $errors,
+            'info'   => $info,
+            'score'  => $score,
+        ];
+    }
+    
 }

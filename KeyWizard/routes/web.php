@@ -28,10 +28,5 @@ Route::get('/ai',          [App\Http\Controllers\AiConsultorController::class, '
 Route::post('/ai/message', [App\Http\Controllers\AiConsultorController::class, 'message'])->name('ai.message');
 Route::post('/ai/apply',   [App\Http\Controllers\AiConsultorController::class, 'apply'])->name('ai.apply');
 
-Route::get('/test-ai', function () {
-    $service = new \App\Services\AiConsultorService();
-    $result  = $service->chat([
-        ['role' => 'user', 'content' => 'Hola, quiero una bóveda personal']
-    ]);
-    return response()->json($result);
-});
+Route::get('/validar', [CustodyController::class, 'validate'])->name('validate');
+Route::post('/validar', [CustodyController::class, 'doValidate'])->name('validate.check');

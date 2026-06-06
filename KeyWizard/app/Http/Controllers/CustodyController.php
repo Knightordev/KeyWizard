@@ -183,4 +183,21 @@ class CustodyController extends Controller
 
         return $scenarios;
     }
+
+    public function validate()
+    {
+        return view('custody.validate');
+    }
+
+    public function doValidate(Request $request)
+    {
+        $request->validate([
+            'descriptor' => 'required|string',
+        ]);
+
+        $builder = new DescriptorBuilder();
+        $result  = $builder->analyzeDescriptor($request->descriptor);
+
+        return response()->json($result);
+    }
 }

@@ -281,6 +281,60 @@
         justify-content: center;
         padding-top: 1rem;
     }
+    .qr-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-md);
+    border-radius: var(--radius);
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+    }
+
+    .qr-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .qr-label {
+        font-family: 'DM Mono', monospace;
+        font-size: 11px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: var(--text-dim);
+    }
+
+    .qr-hint {
+        font-size: 12px;
+        color: var(--text-dim);
+    }
+
+    .qr-body {
+        padding: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        flex-wrap: wrap;
+    }
+
+    #qr-code {
+        background: #fff;
+        padding: 12px;
+        border-radius: var(--radius-sm);
+        display: inline-block;
+    }
+
+    #qr-code canvas,
+    #qr-code img {
+        display: block;
+    }
+
+    .btn-sm {
+        padding: 7px 16px;
+        font-size: 13px;
+        border-radius: var(--radius-sm);
+    }
 </style>
 @endpush
 
@@ -307,6 +361,19 @@
         <div class="descriptor-body">
             <div class="descriptor-text" id="descriptor-value">{{ $data['descriptor'] }}</div>
             <div class="descriptor-desc">{{ $data['descripcion'] }}</div>
+        </div>
+    </div>
+
+    <div class="qr-card">
+        <div class="qr-header">
+            <span class="qr-label">Código QR del descriptor</span>
+            <span class="qr-hint">Escanéalo desde Sparrow o guárdalo como imagen</span>
+        </div>
+        <div class="qr-body">
+            <div id="qr-code"></div>
+            <button class="btn btn-ghost btn-sm" id="btn-download-qr">
+                ⬇ Descargar QR
+            </button>
         </div>
     </div>
 
@@ -385,6 +452,7 @@
 @endsection
 
 @push('scripts')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
     const descriptor = @json($data['descriptor']);
 
@@ -420,5 +488,23 @@
         a.click();
         URL.revokeObjectURL(url);
     }
+
+        const qrInstance = new QRCode(document.getElementById('qr-code'), {
+        text:         descriptor,
+        width:        160,
+        height:       160,
+        colorDark:    '#a78bfa',
+        colorLight:   '#ffffff',
+        correctLevel: QRCode.CorrectLevel.M,
+    });
+
+    document.getElementById('btn-download-qr').addEventListener('click', () => {
+        const canvas = document.querySelector('#qr-code canvas');
+        if (!canvas) return;
+        const a      = document.createElement('a');
+        a.download   = 'keywizard-qr.png';
+        a.href       = canvas.toDataURL('image/png');
+        a.click();
+    });
 </script>
 @endpush
