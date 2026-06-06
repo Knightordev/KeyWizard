@@ -177,9 +177,9 @@ Desarrollado para el **Hackathon h2 · selfcustody-ui-challenge**
 Fecha de entrega: 8 de junio de 2026
 
 **Integrantes**
-Sofia Jimena Mezeta Castillo
-Héctor Iván Chumba Poot
-Yael Israel Pérez Espadas
+- Sofia Jimena Mezeta Castillo
+- Héctor Iván Chumba Poot
+- Yael Israel Pérez Espadas
 ---
 
 ## Licencia
