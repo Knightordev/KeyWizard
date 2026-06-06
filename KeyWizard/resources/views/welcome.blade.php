@@ -207,6 +207,111 @@
         font-size: 1rem;
         line-height: 1.7;
     }
+    .onboarding-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(8,8,15,0.92);
+        backdrop-filter: blur(8px);
+        z-index: 999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1.5rem;
+        animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to   { opacity: 1; }
+    }
+
+    .onboarding-box {
+        background: var(--bg-card);
+        border: 1px solid var(--border-md);
+        border-radius: var(--radius);
+        max-width: 520px;
+        width: 100%;
+        overflow: hidden;
+        animation: slideUp 0.3s ease;
+    }
+
+    @keyframes slideUp {
+        from { transform: translateY(20px); opacity: 0; }
+        to   { transform: translateY(0);    opacity: 1; }
+    }
+
+    .onboarding-slides {
+        padding: 2.5rem 2.5rem 1.5rem;
+        min-height: 280px;
+    }
+
+    .onboarding-slide {
+        display: none;
+        animation: fadeIn 0.2s ease;
+    }
+
+    .onboarding-slide.active {
+        display: block;
+    }
+
+    .slide-emoji {
+        font-size: 36px;
+        margin-bottom: 1.25rem;
+    }
+
+    .onboarding-slide h2 {
+        font-family: 'Syne', sans-serif;
+        font-size: 1.4rem;
+        font-weight: 800;
+        letter-spacing: -0.3px;
+        margin-bottom: 1rem;
+        color: var(--text);
+    }
+
+    .onboarding-slide p {
+        font-size: 14px;
+        color: var(--text-muted);
+        line-height: 1.75;
+        margin-bottom: 0.75rem;
+    }
+
+    .onboarding-slide p strong {
+        color: var(--purple);
+        font-weight: 600;
+    }
+
+    .onboarding-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1.25rem 2.5rem;
+        border-top: 1px solid var(--border);
+    }
+
+    .onboarding-dots {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+    }
+
+    .od {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--border-md);
+        transition: all 0.2s;
+    }
+
+    .od.active {
+        width: 20px;
+        border-radius: 99px;
+        background: var(--purple);
+    }
+
+    .onboarding-actions {
+        display: flex;
+        gap: 8px;
+    }
 </style>
 @endpush
 
@@ -320,9 +425,98 @@
     <div class="cta-divider"></div>
     <h2>¿Listo para tomar control?</h2>
     <p>En 4 pasos tienes tu bóveda lista.<br>No necesitas saber programación ni Bitcoin.</p>
-    <button class="btn btn-primary btn-lg">
+    <a href="{{ route('wizard.step1') }}" class="btn btn-primary btn-lg">
         Empezar ahora →
-    </button>
+    </a>
 </section>
 
+<div class="onboarding-overlay" id="onboarding" style="display:none;">
+    <div class="onboarding-box">
+
+        <div class="onboarding-slides">
+
+            <div class="onboarding-slide active" data-slide="0">
+                <div class="slide-emoji">🔐</div>
+                <h2>¿Qué es la autocustodia?</h2>
+                <p>Cuando guardas Bitcoin en un exchange como Binance o Coinbase, <strong>ellos tienen tus llaves</strong> — no tú. Si el exchange quiebra o te bloquea, pierdes todo.</p>
+                <p>La autocustodia significa que <strong>tú controlas tus propias llaves</strong>. Nadie puede congelarte los fondos ni pedirte permiso.</p>
+            </div>
+
+            <div class="onboarding-slide" data-slide="1">
+                <div class="slide-emoji">🔑🔑🔑</div>
+                <h2>¿Qué es multifirma?</h2>
+                <p>Imagina una caja fuerte que necesita <strong>2 de 3 llaves</strong> para abrirse. Si pierdes una llave, no pasa nada — todavía tienes las otras dos.</p>
+                <p>Eso es multifirma: distribuyes el control entre varios dispositivos para eliminar el punto único de fallo.</p>
+            </div>
+
+            <div class="onboarding-slide" data-slide="2">
+                <div class="slide-emoji">✨</div>
+                <h2>¿Cómo te ayuda KeyWizard?</h2>
+                <p>Configurar multifirma es técnicamente complejo. KeyWizard te guía con preguntas simples y genera automáticamente el <strong>descriptor</strong> — el archivo de configuración que necesitas.</p>
+                <p>En menos de 10 minutos tienes tu bóveda lista para importar en Sparrow o Liana.</p>
+            </div>
+
+        </div>
+
+        <div class="onboarding-footer">
+            <div class="onboarding-dots">
+                <div class="od active" data-dot="0"></div>
+                <div class="od" data-dot="1"></div>
+                <div class="od" data-dot="2"></div>
+            </div>
+            <div class="onboarding-actions">
+                <button class="btn btn-ghost" id="ob-skip">Saltar</button>
+                <button class="btn btn-primary" id="ob-next">Siguiente →</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
 @endsection
+
+@push('scripts')
+<script>
+    (function() {
+        const overlay = document.getElementById('onboarding');
+        const seen    = localStorage.getItem('kw_onboarding_seen');
+
+        if (!seen) {
+            overlay.style.display = 'flex';
+        }
+
+        let current = 0;
+        const total = 3;
+
+        function goTo(index) {
+            document.querySelectorAll('.onboarding-slide').forEach((s, i) => {
+                s.classList.toggle('active', i === index);
+            });
+            document.querySelectorAll('.od').forEach((d, i) => {
+                d.classList.toggle('active', i === index);
+            });
+            document.getElementById('ob-next').textContent = index === total - 1 ? '¡Empezar! →' : 'Siguiente →';
+            current = index;
+        }
+
+        document.getElementById('ob-next').addEventListener('click', () => {
+            if (current < total - 1) {
+                goTo(current + 1);
+            } else {
+                closeOnboarding();
+            }
+        });
+
+        document.getElementById('ob-skip').addEventListener('click', closeOnboarding);
+
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) closeOnboarding();
+        });
+
+        function closeOnboarding() {
+            overlay.style.display = 'none';
+            localStorage.setItem('kw_onboarding_seen', '1');
+        }
+    })();
+</script>
+@endpush

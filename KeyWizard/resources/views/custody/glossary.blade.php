@@ -5,14 +5,14 @@
 @push('styles')
 <style>
     .glossary-wrap {
-        max-width: 720px;
+        max-width: 900px;
         margin: 0 auto;
         padding: 3rem 2rem 5rem;
     }
 
     .glossary-header {
         text-align: center;
-        margin-bottom: 3.5rem;
+        margin-bottom: 3rem;
     }
 
     .glossary-header h1 {
@@ -23,9 +23,7 @@
         margin-bottom: 0.75rem;
     }
 
-    .glossary-header h1 span {
-        color: var(--purple);
-    }
+    .glossary-header h1 span { color: var(--purple); }
 
     .glossary-header p {
         color: var(--text-muted);
@@ -35,160 +33,397 @@
         margin: 0 auto;
     }
 
-    .search-wrap {
-        position: relative;
+    .filters {
+        display: flex;
+        gap: 8px;
+        justify-content: center;
+        flex-wrap: wrap;
         margin-bottom: 2.5rem;
     }
 
-    .search-icon {
-        position: absolute;
-        left: 14px;
-        top: 50%;
-        transform: translateY(-50%);
-        color: var(--text-dim);
-        font-size: 15px;
-        pointer-events: none;
-    }
-
-    .search-input {
-        width: 100%;
+    .filter-btn {
         background: var(--bg-card);
         border: 1px solid var(--border-md);
+        border-radius: 99px;
+        padding: 6px 16px;
+        font-size: 12px;
+        font-family: 'DM Mono', monospace;
+        color: var(--text-muted);
+        cursor: pointer;
+        transition: all 0.15s;
+    }
+
+    .filter-btn:hover {
+        border-color: var(--purple);
+        color: var(--purple);
+    }
+
+    .filter-btn.active {
+        background: var(--purple-dim);
+        border-color: var(--purple);
+        color: var(--purple);
+    }
+
+    .cards-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 16px;
+        margin-bottom: 3rem;
+    }
+
+    .flashcard {
+        height: 200px;
+        perspective: 1000px;
+        cursor: pointer;
+    }
+
+    .flashcard-inner {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        transform-style: preserve-3d;
+        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .flashcard.flipped .flashcard-inner {
+        transform: rotateY(180deg);
+    }
+
+    .flashcard-front,
+    .flashcard-back {
+        position: absolute;
+        inset: 0;
+        backface-visibility: hidden;
         border-radius: var(--radius);
-        padding: 12px 14px 12px 40px;
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .flashcard-front {
+        background: var(--bg-card);
+        border: 1px solid var(--border-md);
+        justify-content: space-between;
+        transition: border-color 0.15s;
+    }
+
+    .flashcard:hover .flashcard-front {
+        border-color: var(--border-strong);
+    }
+
+    .flashcard-back {
+        background: var(--bg-hover);
+        border: 1px solid var(--purple-border);
+        transform: rotateY(180deg);
+        justify-content: space-between;
+    }
+
+    .card-tag {
+        display: inline-flex;
+        align-self: flex-start;
+        background: var(--purple-dim);
+        border: 1px solid var(--purple-border);
+        border-radius: 99px;
+        padding: 3px 10px;
+        font-family: 'DM Mono', monospace;
+        font-size: 10px;
+        color: var(--purple);
+        letter-spacing: 0.5px;
+    }
+
+    .card-front-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .card-emoji {
+        font-size: 28px;
+    }
+
+    .card-term {
+        font-family: 'Syne', sans-serif;
+        font-size: 1.15rem;
+        font-weight: 800;
+        color: var(--text);
+        letter-spacing: -0.3px;
+    }
+
+    .card-hint {
+        font-size: 11px;
+        color: var(--text-dim);
+        font-family: 'DM Mono', monospace;
+    }
+
+    .card-back-def {
+        font-size: 13px;
+        color: var(--text-muted);
+        line-height: 1.65;
+        flex: 1;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 5;
+        -webkit-box-orient: vertical;
+    }
+
+    .card-back-actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 1rem;
+    }
+
+    .card-ask-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        background: var(--purple-dim);
+        border: 1px solid var(--purple-border);
+        border-radius: var(--radius-xs);
+        padding: 5px 10px;
+        font-size: 11px;
+        color: var(--purple);
+        cursor: pointer;
+        transition: all 0.15s;
+        font-family: 'DM Sans', sans-serif;
+    }
+
+    .card-ask-btn:hover {
+        background: var(--purple-glow);
+        border-color: var(--purple);
+    }
+
+    .card-flip-back {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        background: transparent;
+        border: 1px solid var(--border-md);
+        border-radius: var(--radius-xs);
+        padding: 5px 10px;
+        font-size: 11px;
+        color: var(--text-dim);
+        cursor: pointer;
+        transition: all 0.15s;
+        font-family: 'DM Sans', sans-serif;
+    }
+
+    .card-flip-back:hover {
+        color: var(--text);
+        border-color: var(--border-strong);
+    }
+
+    .no-cards {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 3rem;
+        color: var(--text-dim);
         font-size: 14px;
+    }
+
+    .ai-drawer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: var(--bg-card);
+        border-top: 1px solid var(--border-md);
+        border-radius: var(--radius) var(--radius) 0 0;
+        padding: 1.5rem;
+        z-index: 200;
+        transform: translateY(100%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        max-height: 60vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .ai-drawer.open {
+        transform: translateY(0);
+    }
+
+    .drawer-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+    }
+
+    .drawer-title {
+        font-family: 'Syne', sans-serif;
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .drawer-term {
+        color: var(--purple);
+    }
+
+    .drawer-close {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        border: 1px solid var(--border-md);
+        background: transparent;
+        color: var(--text-muted);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        transition: all 0.15s;
+    }
+
+    .drawer-close:hover {
+        border-color: var(--border-strong);
+        color: var(--text);
+    }
+
+    .drawer-messages {
+        flex: 1;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 1rem;
+        max-height: 280px;
+    }
+
+    .drawer-msg {
+        display: flex;
+        gap: 8px;
+        align-items: flex-start;
+    }
+
+    .drawer-msg.user { flex-direction: row-reverse; }
+
+    .drawer-avatar {
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        flex-shrink: 0;
+    }
+
+    .drawer-msg.ai .drawer-avatar {
+        background: var(--purple-dim);
+        border: 1px solid var(--purple-border);
+    }
+
+    .drawer-msg.user .drawer-avatar {
+        background: var(--bg-hover);
+        border: 1px solid var(--border-md);
+    }
+
+    .drawer-bubble {
+        max-width: 85%;
+        padding: 8px 12px;
+        border-radius: 10px;
+        font-size: 13px;
+        line-height: 1.6;
+    }
+
+    .drawer-msg.ai .drawer-bubble {
+        background: var(--bg-hover);
+        border: 1px solid var(--border);
+        color: var(--text);
+        border-top-left-radius: 3px;
+    }
+
+    .drawer-msg.user .drawer-bubble {
+        background: var(--purple-dim);
+        border: 1px solid var(--purple-border);
+        color: var(--text);
+        border-top-right-radius: 3px;
+    }
+
+    .drawer-typing {
+        display: none;
+        gap: 4px;
+        align-items: center;
+        padding: 8px 12px;
+        background: var(--bg-hover);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        border-top-left-radius: 3px;
+        width: fit-content;
+    }
+
+    .drawer-typing.visible { display: flex; }
+
+    .typing-dot {
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: var(--text-dim);
+        animation: typing 1.2s infinite;
+    }
+
+    .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes typing {
+        0%, 100% { transform: translateY(0); opacity: 0.4; }
+        50%       { transform: translateY(-3px); opacity: 1; }
+    }
+
+    .drawer-input-wrap {
+        display: flex;
+        gap: 8px;
+    }
+
+    .drawer-input {
+        flex: 1;
+        background: var(--bg);
+        border: 1px solid var(--border-md);
+        border-radius: var(--radius-sm);
+        padding: 9px 12px;
+        font-size: 13px;
         font-family: 'DM Sans', sans-serif;
         color: var(--text);
         outline: none;
         transition: border-color 0.15s;
     }
 
-    .search-input:focus {
-        border-color: var(--purple);
-    }
+    .drawer-input:focus { border-color: var(--purple); }
+    .drawer-input::placeholder { color: var(--text-dim); }
 
-    .search-input::placeholder {
-        color: var(--text-dim);
-    }
-
-    .glossary-section {
-        margin-bottom: 2.5rem;
-    }
-
-    .section-letter {
-        font-family: 'DM Mono', monospace;
-        font-size: 11px;
-        letter-spacing: 2px;
-        text-transform: uppercase;
-        color: var(--purple);
-        opacity: 0.6;
-        margin-bottom: 1rem;
-        padding-bottom: 0.5rem;
-        border-bottom: 1px solid var(--border);
-    }
-
-    .term-card {
-        background: var(--bg-card);
-        border: 1px solid var(--border);
+    .drawer-send {
+        width: 36px;
+        height: 36px;
         border-radius: var(--radius-sm);
-        padding: 1.25rem 1.5rem;
-        margin-bottom: 8px;
-        transition: border-color 0.15s;
+        background: var(--purple);
+        border: none;
+        color: #08080f;
+        font-size: 14px;
         cursor: pointer;
-    }
-
-    .term-card:hover {
-        border-color: var(--border-md);
-    }
-
-    .term-card.open {
-        border-color: var(--purple-border);
-        background: var(--bg-hover);
-    }
-
-    .term-header {
         display: flex;
         align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-    }
-
-    .term-name {
-        font-family: 'Syne', sans-serif;
-        font-size: 15px;
-        font-weight: 700;
-        color: var(--text);
-    }
-
-    .term-tag {
-        font-family: 'DM Mono', monospace;
-        font-size: 10px;
-        padding: 3px 8px;
-        border-radius: 99px;
-        background: var(--purple-dim);
-        border: 1px solid var(--purple-border);
-        color: var(--purple);
-        white-space: nowrap;
+        justify-content: center;
+        transition: all 0.15s;
         flex-shrink: 0;
     }
 
-    .term-arrow {
-        color: var(--text-dim);
-        font-size: 12px;
-        transition: transform 0.2s;
-        flex-shrink: 0;
-    }
+    .drawer-send:hover { background: var(--purple-bright); }
+    .drawer-send:disabled { opacity: 0.4; cursor: not-allowed; }
 
-    .term-card.open .term-arrow {
-        transform: rotate(180deg);
-    }
-
-    .term-body {
-        display: none;
-        margin-top: 1rem;
-        padding-top: 1rem;
-        border-top: 1px solid var(--border);
-    }
-
-    .term-card.open .term-body {
-        display: block;
-    }
-
-    .term-def {
-        font-size: 14px;
-        color: var(--text-muted);
-        line-height: 1.75;
-        margin-bottom: 0.75rem;
-    }
-
-    .term-example {
-        background: var(--bg);
-        border: 1px solid var(--border);
-        border-radius: var(--radius-xs);
-        padding: 10px 14px;
-        font-family: 'DM Mono', monospace;
-        font-size: 12px;
-        color: var(--purple);
-        word-break: break-all;
-        line-height: 1.6;
-    }
-
-    .term-tip {
-        margin-top: 0.75rem;
-        font-size: 13px;
-        color: var(--text-dim);
-        display: flex;
-        gap: 8px;
-        align-items: flex-start;
-    }
-
-    .no-results {
-        text-align: center;
-        padding: 3rem 0;
-        color: var(--text-dim);
-        font-size: 14px;
+    .drawer-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(8,8,15,0.5);
+        z-index: 199;
         display: none;
     }
+
+    .drawer-overlay.open { display: block; }
 </style>
 @endpush
 
@@ -198,330 +433,447 @@
 
     <div class="glossary-header">
         <h1>Glosario <span>Bitcoin</span></h1>
-        <p>terminos que deberias saber!</p>
+        <p>Haz click en una tarjeta para ver la definición. ¿Quieres saber más? Pregúntale a la IA.</p>
     </div>
 
-    <div class="search-wrap">
-        <span class="search-icon">🔍</span>
-        <input
-            type="text"
-            class="search-input"
-            id="search-input"
-            placeholder="Buscar término... ej: xpub, multisig, descriptor"
-            autocomplete="off"
-        >
+    <div class="filters">
+        <button class="filter-btn active" data-filter="all">Todos</button>
+        <button class="filter-btn" data-filter="base">Base</button>
+        <button class="filter-btn" data-filter="seguridad">Seguridad</button>
+        <button class="filter-btn" data-filter="técnico">Técnico</button>
+        <button class="filter-btn" data-filter="concepto">Concepto</button>
+        <button class="filter-btn" data-filter="dispositivo">Dispositivo</button>
+        <button class="filter-btn" data-filter="software">Software</button>
     </div>
 
-    <div id="glossary-content">
+    <div class="cards-grid" id="cards-grid">
 
-        <div class="glossary-section" data-section="B">
-            <div class="section-letter">B</div>
-
-            <div class="term-card" data-term="bitcoin">
-                <div class="term-header">
-                    <span class="term-name">Bitcoin</span>
-                    <span class="term-tag">base</span>
-                    <span class="term-arrow">▼</span>
+        <div class="flashcard" data-tag="base" data-term="Bitcoin" data-def="Moneda digital descentralizada creada en 2009. No existe un banco ni gobierno que la controle — las reglas las define el código y los usuarios de la red. Si tienes las llaves, tienes el dinero.">
+            <div class="flashcard-inner">
+                <div class="flashcard-front">
+                    <span class="card-tag">base</span>
+                    <div class="card-front-content">
+                        <div class="card-emoji">₿</div>
+                        <div class="card-term">Bitcoin</div>
+                        <div class="card-hint">click para voltear</div>
+                    </div>
                 </div>
-                <div class="term-body">
-                    <div class="term-def">Moneda digital descentralizada creada en 2009. No existe un banco ni gobierno que la controle — las reglas las define el código y los usuarios de la red.</div>
-                    <div class="term-tip">💡 Piénsalo como efectivo digital: si tienes las llaves, tienes el dinero.</div>
-                </div>
-            </div>
-
-            <div class="term-card" data-term="bip">
-                <div class="term-header">
-                    <span class="term-name">BIP (Bitcoin Improvement Proposal)</span>
-                    <span class="term-tag">técnico</span>
-                    <span class="term-arrow">▼</span>
-                </div>
-                <div class="term-body">
-                    <div class="term-def">Documentos oficiales que proponen mejoras al protocolo Bitcoin. Cuando ves "BIP32" o "BIP39", se refiere a estándares que la comunidad adoptó para que todo funcione igual en todas las wallets.</div>
+                <div class="flashcard-back">
+                    <div class="card-back-def">Moneda digital descentralizada creada en 2009. No existe un banco ni gobierno que la controle — las reglas las define el código y los usuarios de la red. Si tienes las llaves, tienes el dinero.</div>
+                    <div class="card-back-actions">
+                        <button class="card-ask-btn">🤖 Explícame más</button>
+                        <button class="card-flip-back">↩ Voltear</button>
+                    </div>
                 </div>
             </div>
-
         </div>
 
-        <div class="glossary-section" data-section="C">
-            <div class="section-letter">C</div>
-
-            <div class="term-card" data-term="checksum">
-                <div class="term-header">
-                    <span class="term-name">Checksum</span>
-                    <span class="term-tag">técnico</span>
-                    <span class="term-arrow">▼</span>
+        <div class="flashcard" data-tag="seguridad" data-term="Clave privada" data-def="El secreto más importante de tu wallet. Es un número enorme que te permite firmar transacciones y demostrar que eres el dueño de los fondos. Quien tenga tu clave privada tiene tu Bitcoin. Jamás la compartas.">
+            <div class="flashcard-inner">
+                <div class="flashcard-front">
+                    <span class="card-tag">seguridad</span>
+                    <div class="card-front-content">
+                        <div class="card-emoji">🔒</div>
+                        <div class="card-term">Clave privada</div>
+                        <div class="card-hint">click para voltear</div>
+                    </div>
                 </div>
-                <div class="term-body">
-                    <div class="term-def">Número de verificación al final de una dirección o clave que detecta errores de escritura. Si cambias aunque sea una letra, el checksum falla y la wallet lo rechaza antes de enviar fondos al lugar equivocado.</div>
-                    <div class="term-tip">💡 Es como el dígito verificador de un RUT o CURP.</div>
-                </div>
-            </div>
-
-            <div class="term-card" data-term="clave privada">
-                <div class="term-header">
-                    <span class="term-name">Clave privada</span>
-                    <span class="term-tag">seguridad</span>
-                    <span class="term-arrow">▼</span>
-                </div>
-                <div class="term-body">
-                    <div class="term-def">El secreto más importante de tu wallet. Es un número enorme que te permite firmar transacciones y demostrar que eres el dueño de los fondos. Quien tenga tu clave privada tiene tu Bitcoin.</div>
-                    <div class="term-example">xprv9s21ZrQH143K3QTDL4LXw2F7HEK3wJUD2nW2nRk4stbPy6cq3jPPqhuCe5... ← NUNCA compartas esto</div>
-                    <div class="term-tip">⚠️ Jamás la compartas ni la escribas en una computadora conectada a internet.</div>
+                <div class="flashcard-back">
+                    <div class="card-back-def">El secreto más importante de tu wallet. Es un número enorme que te permite firmar transacciones y demostrar que eres el dueño de los fondos. Quien tenga tu clave privada tiene tu Bitcoin. Jamás la compartas.</div>
+                    <div class="card-back-actions">
+                        <button class="card-ask-btn">🤖 Explícame más</button>
+                        <button class="card-flip-back">↩ Voltear</button>
+                    </div>
                 </div>
             </div>
-
-            <div class="term-card" data-term="clave publica xpub">
-                <div class="term-header">
-                    <span class="term-name">Clave pública (xpub)</span>
-                    <span class="term-tag">seguridad</span>
-                    <span class="term-arrow">▼</span>
-                </div>
-                <div class="term-body">
-                    <div class="term-def">La parte pública de tu llave. Se puede compartir sin riesgo y permite generar direcciones de recepción. No permite gastar fondos — solo verlos y recibirlos.</div>
-                    <div class="term-example">xpub6CUGRUonZSQ4TWtTMmzXdrXDtypWKiKrhko4egpiMZbpiaQL2jkwSB1icqYh2...</div>
-                    <div class="term-tip">💡 Es como tu número de cuenta bancaria: puedes dárselo a alguien para que te deposite, pero no pueden retirar con él.</div>
-                </div>
-            </div>
-
-            <div class="term-card" data-term="custodia autocustodia self-custody">
-                <div class="term-header">
-                    <span class="term-name">Custodia / Self-custody</span>
-                    <span class="term-tag">concepto</span>
-                    <span class="term-arrow">▼</span>
-                </div>
-                <div class="term-body">
-                    <div class="term-def">Guardar tus propias llaves sin depender de un exchange o tercero. "Not your keys, not your coins" — si no tienes las llaves, técnicamente el Bitcoin no es tuyo.</div>
-                    <div class="term-tip">💡 La diferencia entre tener Bitcoin en Binance vs en una hardware wallet.</div>
-                </div>
-            </div>
-
         </div>
 
-        <div class="glossary-section" data-section="D">
-            <div class="section-letter">D</div>
-
-            <div class="term-card" data-term="descriptor output descriptor">
-                <div class="term-header">
-                    <span class="term-name">Descriptor (Output Descriptor)</span>
-                    <span class="term-tag">técnico</span>
-                    <span class="term-arrow">▼</span>
+        <div class="flashcard" data-tag="seguridad" data-term="Clave pública (xpub)" data-def="La parte pública de tu llave. Se puede compartir sin riesgo y permite generar direcciones de recepción. No permite gastar fondos — solo verlos y recibirlos. Es como tu número de cuenta bancaria.">
+            <div class="flashcard-inner">
+                <div class="flashcard-front">
+                    <span class="card-tag">seguridad</span>
+                    <div class="card-front-content">
+                        <div class="card-emoji">🔑</div>
+                        <div class="card-term">Clave pública (xpub)</div>
+                        <div class="card-hint">click para voltear</div>
+                    </div>
                 </div>
-                <div class="term-body">
-                    <div class="term-def">Texto que describe exactamente las reglas de tu wallet: qué claves la controlan y cuántas firmas se necesitan. Es el formato estándar que entienden Sparrow, Liana y otras wallets modernas.</div>
-                    <div class="term-example">wsh(multi(2,xpub1.../0/*,xpub2.../0/*,xpub3.../0/*))</div>
-                    <div class="term-tip">💡 KeyWizard genera este texto por ti a partir de tus respuestas.</div>
-                </div>
-            </div>
-
-            <div class="term-card" data-term="derivacion ruta derivacion">
-                <div class="term-header">
-                    <span class="term-name">Ruta de derivación</span>
-                    <span class="term-tag">técnico</span>
-                    <span class="term-arrow">▼</span>
-                </div>
-                <div class="term-body">
-                    <div class="term-def">Instrucción que indica cómo generar direcciones a partir de una clave maestra. El /0/* al final de cada xpub en tu descriptor le dice a Sparrow qué direcciones generar para recibir fondos.</div>
-                    <div class="term-example">xpub6CUG.../0/* ← el /0/* es la ruta de derivación</div>
+                <div class="flashcard-back">
+                    <div class="card-back-def">La parte pública de tu llave. Se puede compartir sin riesgo y permite generar direcciones de recepción. No permite gastar fondos — solo verlos y recibirlos. Es como tu número de cuenta bancaria.</div>
+                    <div class="card-back-actions">
+                        <button class="card-ask-btn">🤖 Explícame más</button>
+                        <button class="card-flip-back">↩ Voltear</button>
+                    </div>
                 </div>
             </div>
-
         </div>
 
-        <div class="glossary-section" data-section="F">
-            <div class="section-letter">F</div>
-
-            <div class="term-card" data-term="firma threshold firmas requeridas">
-                <div class="term-header">
-                    <span class="term-name">Firma / Threshold</span>
-                    <span class="term-tag">concepto</span>
-                    <span class="term-arrow">▼</span>
+        <div class="flashcard" data-tag="concepto" data-term="Multifirma (Multisig)" data-def="Esquema donde se necesita más de una firma para aprobar una transacción. Se escribe como m de n — por ejemplo 2 de 3 significa que de 3 llaves existentes, cualquier combinación de 2 puede firmar. Elimina el punto único de fallo.">
+            <div class="flashcard-inner">
+                <div class="flashcard-front">
+                    <span class="card-tag">concepto</span>
+                    <div class="card-front-content">
+                        <div class="card-emoji">🔑🔑🔑</div>
+                        <div class="card-term">Multifirma</div>
+                        <div class="card-hint">click para voltear</div>
+                    </div>
                 </div>
-                <div class="term-body">
-                    <div class="term-def">Firmar una transacción significa aprobarla con tu clave privada. El threshold es cuántas firmas se necesitan para que sea válida. En un esquema 2 de 3, necesitas exactamente 2 aprobaciones de las 3 posibles.</div>
-                    <div class="term-tip">💡 Como un cheque que necesita dos firmas de los directores para ser válido.</div>
+                <div class="flashcard-back">
+                    <div class="card-back-def">Esquema donde se necesita más de una firma para aprobar una transacción. Se escribe como m de n — por ejemplo 2 de 3 significa que de 3 llaves existentes, cualquier combinación de 2 puede firmar. Elimina el punto único de fallo.</div>
+                    <div class="card-back-actions">
+                        <button class="card-ask-btn">🤖 Explícame más</button>
+                        <button class="card-flip-back">↩ Voltear</button>
+                    </div>
                 </div>
             </div>
-
         </div>
 
-        <div class="glossary-section" data-section="H">
-            <div class="section-letter">H</div>
-
-            <div class="term-card" data-term="hardware wallet dispositivo">
-                <div class="term-header">
-                    <span class="term-name">Hardware Wallet</span>
-                    <span class="term-tag">dispositivo</span>
-                    <span class="term-arrow">▼</span>
+        <div class="flashcard" data-tag="técnico" data-term="Descriptor" data-def="Texto que describe exactamente las reglas de tu wallet: qué claves la controlan y cuántas firmas se necesitan. Es el formato estándar que entienden Sparrow, Liana y otras wallets modernas. KeyWizard genera este texto por ti.">
+            <div class="flashcard-inner">
+                <div class="flashcard-front">
+                    <span class="card-tag">técnico</span>
+                    <div class="card-front-content">
+                        <div class="card-emoji">📄</div>
+                        <div class="card-term">Descriptor</div>
+                        <div class="card-hint">click para voltear</div>
+                    </div>
                 </div>
-                <div class="term-body">
-                    <div class="term-def">Dispositivo físico (parecido a una USB) que guarda tu clave privada completamente offline. Las marcas más conocidas son Ledger, Trezor y Coldcard. Tu clave nunca sale del dispositivo.</div>
-                    <div class="term-tip">💡 Es la forma más segura de guardar Bitcoin para montos significativos.</div>
+                <div class="flashcard-back">
+                    <div class="card-back-def">Texto que describe exactamente las reglas de tu wallet: qué claves la controlan y cuántas firmas se necesitan. Es el formato estándar que entienden Sparrow, Liana y otras wallets modernas. KeyWizard genera este texto por ti.</div>
+                    <div class="card-back-actions">
+                        <button class="card-ask-btn">🤖 Explícame más</button>
+                        <button class="card-flip-back">↩ Voltear</button>
+                    </div>
                 </div>
             </div>
-
         </div>
 
-        <div class="glossary-section" data-section="M">
-            <div class="section-letter">M</div>
-
-            <div class="term-card" data-term="miniscript">
-                <div class="term-header">
-                    <span class="term-name">Miniscript</span>
-                    <span class="term-tag">técnico</span>
-                    <span class="term-arrow">▼</span>
+        <div class="flashcard" data-tag="concepto" data-term="Custodia (Self-custody)" data-def="Guardar tus propias llaves sin depender de un exchange o tercero. Not your keys, not your coins — si no tienes las llaves, técnicamente el Bitcoin no es tuyo. La diferencia entre tener Bitcoin en Binance vs en una hardware wallet.">
+            <div class="flashcard-inner">
+                <div class="flashcard-front">
+                    <span class="card-tag">concepto</span>
+                    <div class="card-front-content">
+                        <div class="card-emoji">🏛️</div>
+                        <div class="card-term">Self-custody</div>
+                        <div class="card-hint">click para voltear</div>
+                    </div>
                 </div>
-                <div class="term-body">
-                    <div class="term-def">Lenguaje estructurado para escribir políticas de gasto en Bitcoin. Permite condiciones más complejas que el multisig simple, como "firma A o (firma B después de 1 año)".</div>
-                    <div class="term-tip">💡 Liana lo usa extensivamente para wallets con recuperación por timelock.</div>
-                </div>
-            </div>
-
-            <div class="term-card" data-term="multisig multifirma multi-firma">
-                <div class="term-header">
-                    <span class="term-name">Multisig (Multifirma)</span>
-                    <span class="term-tag">concepto</span>
-                    <span class="term-arrow">▼</span>
-                </div>
-                <div class="term-body">
-                    <div class="term-def">Esquema donde se necesita más de una firma para aprobar una transacción. Se escribe como "m de n" — por ejemplo 2 de 3 significa que de 3 llaves existentes, cualquier combinación de 2 puede firmar.</div>
-                    <div class="term-example">wsh(multi(2, llave1, llave2, llave3))</div>
-                    <div class="term-tip">💡 Elimina el punto único de fallo: si pierdes una llave, no pierdes todo.</div>
+                <div class="flashcard-back">
+                    <div class="card-back-def">Guardar tus propias llaves sin depender de un exchange o tercero. Not your keys, not your coins — si no tienes las llaves, técnicamente el Bitcoin no es tuyo.</div>
+                    <div class="card-back-actions">
+                        <button class="card-ask-btn">🤖 Explícame más</button>
+                        <button class="card-flip-back">↩ Voltear</button>
+                    </div>
                 </div>
             </div>
-
         </div>
 
-        <div class="glossary-section" data-section="S">
-            <div class="section-letter">S</div>
-
-            <div class="term-card" data-term="seed frase semilla seed phrase">
-                <div class="term-header">
-                    <span class="term-name">Seed Phrase (Frase semilla)</span>
-                    <span class="term-tag">seguridad</span>
-                    <span class="term-arrow">▼</span>
+        <div class="flashcard" data-tag="seguridad" data-term="Seed Phrase" data-def="Lista de 12 o 24 palabras que representa tu clave maestra. Con estas palabras puedes recuperar toda tu wallet en cualquier dispositivo compatible. Es el respaldo más importante que tienes. Escríbela en papel, nunca en digital.">
+            <div class="flashcard-inner">
+                <div class="flashcard-front">
+                    <span class="card-tag">seguridad</span>
+                    <div class="card-front-content">
+                        <div class="card-emoji">📝</div>
+                        <div class="card-term">Seed Phrase</div>
+                        <div class="card-hint">click para voltear</div>
+                    </div>
                 </div>
-                <div class="term-body">
-                    <div class="term-def">Lista de 12 o 24 palabras que representa tu clave maestra. Con estas palabras puedes recuperar toda tu wallet en cualquier dispositivo compatible. Es el respaldo más importante que tienes.</div>
-                    <div class="term-example">abandon ability able about above absent absorb abstract absurd abuse access accident...</div>
-                    <div class="term-tip">⚠️ Escríbela en papel, nunca en digital. Guárdala en un lugar seguro y privado.</div>
-                </div>
-            </div>
-
-            <div class="term-card" data-term="segwit p2wpkh p2wsh">
-                <div class="term-header">
-                    <span class="term-name">SegWit (wpkh / wsh)</span>
-                    <span class="term-tag">técnico</span>
-                    <span class="term-arrow">▼</span>
-                </div>
-                <div class="term-body">
-                    <div class="term-def">Formato moderno de transacciones Bitcoin que reduce comisiones y mejora seguridad. El wpkh es para wallets simples de 1 llave y el wsh es para multisig. KeyWizard genera descriptores en este formato.</div>
-                    <div class="term-example">wpkh(xpub.../0/*) ← para 1 llave
-wsh(multi(2,...))  ← para multisig</div>
+                <div class="flashcard-back">
+                    <div class="card-back-def">Lista de 12 o 24 palabras que representa tu clave maestra. Con estas palabras puedes recuperar toda tu wallet en cualquier dispositivo compatible. Escríbela en papel, nunca en digital.</div>
+                    <div class="card-back-actions">
+                        <button class="card-ask-btn">🤖 Explícame más</button>
+                        <button class="card-flip-back">↩ Voltear</button>
+                    </div>
                 </div>
             </div>
-
-            <div class="term-card" data-term="sparrow sparrow wallet">
-                <div class="term-header">
-                    <span class="term-name">Sparrow Wallet</span>
-                    <span class="term-tag">software</span>
-                    <span class="term-arrow">▼</span>
-                </div>
-                <div class="term-body">
-                    <div class="term-def">Wallet de escritorio para Bitcoin con soporte completo de descriptores y multisig. Es una de las opciones más recomendadas para autocustodia avanzada. KeyWizard genera descriptores 100% compatibles con Sparrow.</div>
-                    <div class="term-tip">💡 Descárgalo en sparrowwallet.com</div>
-                </div>
-            </div>
-
         </div>
 
-        <div class="glossary-section" data-section="T">
-            <div class="section-letter">T</div>
-
-            <div class="term-card" data-term="timelock bloqueo temporal">
-                <div class="term-header">
-                    <span class="term-name">Timelock</span>
-                    <span class="term-tag">técnico</span>
-                    <span class="term-arrow">▼</span>
+        <div class="flashcard" data-tag="dispositivo" data-term="Hardware Wallet" data-def="Dispositivo físico parecido a una USB que guarda tu clave privada completamente offline. Las marcas más conocidas son Ledger, Trezor y Coldcard. Tu clave nunca sale del dispositivo. Es la forma más segura de guardar Bitcoin.">
+            <div class="flashcard-inner">
+                <div class="flashcard-front">
+                    <span class="card-tag">dispositivo</span>
+                    <div class="card-front-content">
+                        <div class="card-emoji">🔌</div>
+                        <div class="card-term">Hardware Wallet</div>
+                        <div class="card-hint">click para voltear</div>
+                    </div>
                 </div>
-                <div class="term-body">
-                    <div class="term-def">Condición que bloquea fondos hasta que pase cierto tiempo o se alcance cierto bloque. Se usa en wallets de herencia: "si no muevo mis fondos en 1 año, mi familia puede recuperarlos con su propia llave".</div>
-                    <div class="term-tip">💡 Liana está especializado en este tipo de políticas.</div>
-                </div>
-            </div>
-
-        </div>
-
-        <div class="glossary-section" data-section="X">
-            <div class="section-letter">X</div>
-
-            <div class="term-card" data-term="xpub ypub zpub clave publica extendida">
-                <div class="term-header">
-                    <span class="term-name">xpub / ypub / zpub</span>
-                    <span class="term-tag">técnico</span>
-                    <span class="term-arrow">▼</span>
-                </div>
-                <div class="term-body">
-                    <div class="term-def">Formatos de clave pública extendida. El prefijo indica el tipo de dirección que genera: xpub para Legacy, ypub para P2SH-SegWit y zpub para SegWit nativo. Para multisig moderno se usa xpub.</div>
-                    <div class="term-example">xpub6CUGRUonZSQ4TWtTMmzXdrXDtypWKiKrhko4egpiMZbpiaQL2jkwSB1icqYh2cfDfVxdx4df189oLKnC5fSwqPfgyP3hooxujYzAu3fDVmz</div>
-                    <div class="term-tip">💡 KeyWizard acepta los tres formatos. Se obtiene desde tu hardware wallet.</div>
+                <div class="flashcard-back">
+                    <div class="card-back-def">Dispositivo físico parecido a una USB que guarda tu clave privada completamente offline. Las marcas más conocidas son Ledger, Trezor y Coldcard. Tu clave nunca sale del dispositivo.</div>
+                    <div class="card-back-actions">
+                        <button class="card-ask-btn">🤖 Explícame más</button>
+                        <button class="card-flip-back">↩ Voltear</button>
+                    </div>
                 </div>
             </div>
-
         </div>
 
-        <div class="no-results" id="no-results">
-            No se encontraron términos para "<span id="search-term"></span>"
+        <div class="flashcard" data-tag="software" data-term="Sparrow Wallet" data-def="Wallet de escritorio para Bitcoin con soporte completo de descriptores y multisig. Es una de las opciones más recomendadas para autocustodia avanzada. KeyWizard genera descriptores 100% compatibles con Sparrow.">
+            <div class="flashcard-inner">
+                <div class="flashcard-front">
+                    <span class="card-tag">software</span>
+                    <div class="card-front-content">
+                        <div class="card-emoji">🐦</div>
+                        <div class="card-term">Sparrow Wallet</div>
+                        <div class="card-hint">click para voltear</div>
+                    </div>
+                </div>
+                <div class="flashcard-back">
+                    <div class="card-back-def">Wallet de escritorio para Bitcoin con soporte completo de descriptores y multisig. Es una de las opciones más recomendadas para autocustodia avanzada. KeyWizard genera descriptores 100% compatibles con Sparrow.</div>
+                    <div class="card-back-actions">
+                        <button class="card-ask-btn">🤖 Explícame más</button>
+                        <button class="card-flip-back">↩ Voltear</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flashcard" data-tag="técnico" data-term="Timelock" data-def="Condición que bloquea fondos hasta que pase cierto tiempo. Se usa en wallets de herencia: si no muevo mis fondos en 1 año, mi familia puede recuperarlos con su propia llave. Liana está especializado en este tipo de políticas.">
+            <div class="flashcard-inner">
+                <div class="flashcard-front">
+                    <span class="card-tag">técnico</span>
+                    <div class="card-front-content">
+                        <div class="card-emoji">⏳</div>
+                        <div class="card-term">Timelock</div>
+                        <div class="card-hint">click para voltear</div>
+                    </div>
+                </div>
+                <div class="flashcard-back">
+                    <div class="card-back-def">Condición que bloquea fondos hasta que pase cierto tiempo. Se usa en wallets de herencia: si no muevo mis fondos en 1 año, mi familia puede recuperarlos con su propia llave.</div>
+                    <div class="card-back-actions">
+                        <button class="card-ask-btn">🤖 Explícame más</button>
+                        <button class="card-flip-back">↩ Voltear</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flashcard" data-tag="técnico" data-term="Miniscript" data-def="Lenguaje estructurado para escribir políticas de gasto en Bitcoin. Permite condiciones más complejas que el multisig simple, como firma A o firma B después de 1 año. Liana lo usa extensivamente para wallets con recuperación por timelock.">
+            <div class="flashcard-inner">
+                <div class="flashcard-front">
+                    <span class="card-tag">técnico</span>
+                    <div class="card-front-content">
+                        <div class="card-emoji">📜</div>
+                        <div class="card-term">Miniscript</div>
+                        <div class="card-hint">click para voltear</div>
+                    </div>
+                </div>
+                <div class="flashcard-back">
+                    <div class="card-back-def">Lenguaje estructurado para escribir políticas de gasto en Bitcoin. Permite condiciones más complejas que el multisig simple, como firma A o firma B después de 1 año.</div>
+                    <div class="card-back-actions">
+                        <button class="card-ask-btn">🤖 Explícame más</button>
+                        <button class="card-flip-back">↩ Voltear</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flashcard" data-tag="concepto" data-term="Firma / Threshold" data-def="Firmar una transacción significa aprobarla con tu clave privada. El threshold es cuántas firmas se necesitan para que sea válida. En un esquema 2 de 3, necesitas exactamente 2 aprobaciones de las 3 posibles.">
+            <div class="flashcard-inner">
+                <div class="flashcard-front">
+                    <span class="card-tag">concepto</span>
+                    <div class="card-front-content">
+                        <div class="card-emoji">✍️</div>
+                        <div class="card-term">Firma / Threshold</div>
+                        <div class="card-hint">click para voltear</div>
+                    </div>
+                </div>
+                <div class="flashcard-back">
+                    <div class="card-back-def">Firmar una transacción significa aprobarla con tu clave privada. El threshold es cuántas firmas se necesitan para que sea válida. En un esquema 2 de 3, necesitas exactamente 2 aprobaciones.</div>
+                    <div class="card-back-actions">
+                        <button class="card-ask-btn">🤖 Explícame más</button>
+                        <button class="card-flip-back">↩ Voltear</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="no-cards" id="no-cards" style="display:none;">
+            No hay términos en esta categoría.
         </div>
 
     </div>
 
 </div>
 
+<div class="drawer-overlay" id="drawer-overlay"></div>
+
+<div class="ai-drawer" id="ai-drawer">
+    <div class="drawer-header">
+        <div class="drawer-title">
+            🤖 Preguntando sobre <span class="drawer-term" id="drawer-term">—</span>
+        </div>
+        <button class="drawer-close" id="drawer-close">✕</button>
+    </div>
+    <div class="drawer-messages" id="drawer-messages">
+        <div class="drawer-msg ai" id="drawer-typing-wrap" style="display:none;">
+            <div class="drawer-avatar">🤖</div>
+            <div class="drawer-typing" id="drawer-typing">
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+            </div>
+        </div>
+    </div>
+    <div class="drawer-input-wrap">
+        <input
+            type="text"
+            class="drawer-input"
+            id="drawer-input"
+            placeholder="Escribe tu pregunta..."
+            autocomplete="off"
+        >
+        <button class="drawer-send" id="drawer-send">➤</button>
+    </div>
+</div>
+
 @endsection
 
 @push('scripts')
 <script>
-    const cards  = document.querySelectorAll('.term-card');
-    const search = document.getElementById('search-input');
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const cards      = document.querySelectorAll('.flashcard');
+    const noCards    = document.getElementById('no-cards');
 
-    cards.forEach(card => {
-        card.addEventListener('click', () => {
-            card.classList.toggle('open');
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            filterBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const filter = btn.dataset.filter;
+            let visible  = 0;
+
+            cards.forEach(card => {
+                const show = filter === 'all' || card.dataset.tag === filter;
+                card.style.display = show ? '' : 'none';
+                if (show) visible++;
+            });
+
+            noCards.style.display = visible === 0 ? 'block' : 'none';
         });
     });
 
-    search.addEventListener('input', () => {
-        const query    = search.value.toLowerCase().trim();
-        const sections = document.querySelectorAll('.glossary-section');
-        const noRes    = document.getElementById('no-results');
-        let   found    = 0;
-
-        sections.forEach(section => {
-            let sectionHasMatch = false;
-            const terms = section.querySelectorAll('.term-card');
-
-            terms.forEach(card => {
-                const termData = card.dataset.term.toLowerCase();
-                const termName = card.querySelector('.term-name').textContent.toLowerCase();
-                const match    = termData.includes(query) || termName.includes(query);
-                card.style.display = match || query === '' ? '' : 'none';
-                if (match || query === '') sectionHasMatch = true;
-                if (match && query !== '') found++;
-            });
-
-            section.style.display = sectionHasMatch ? '' : 'none';
+    cards.forEach(card => {
+        card.addEventListener('click', (e) => {
+            if (e.target.closest('.card-ask-btn') || e.target.closest('.card-flip-back')) return;
+            card.classList.toggle('flipped');
         });
 
-        if (query === '') {
-            noRes.style.display = 'none';
-            return;
+        const flipBack = card.querySelector('.card-flip-back');
+        flipBack.addEventListener('click', (e) => {
+            e.stopPropagation();
+            card.classList.remove('flipped');
+        });
+
+        const askBtn = card.querySelector('.card-ask-btn');
+        askBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            openDrawer(card.dataset.term, card.dataset.def);
+        });
+    });
+
+    const drawer        = document.getElementById('ai-drawer');
+    const drawerOverlay = document.getElementById('drawer-overlay');
+    const drawerClose   = document.getElementById('drawer-close');
+    const drawerTerm    = document.getElementById('drawer-term');
+    const drawerMsgs    = document.getElementById('drawer-messages');
+    const drawerInput   = document.getElementById('drawer-input');
+    const drawerSend    = document.getElementById('drawer-send');
+    const drawerTyping  = document.getElementById('drawer-typing-wrap');
+
+    let drawerHistory   = [];
+    let currentTerm     = '';
+
+    function openDrawer(term, def) {
+        currentTerm      = term;
+        drawerTerm.textContent = term;
+        drawerHistory    = [];
+
+        drawerMsgs.querySelectorAll('.drawer-msg:not(#drawer-typing-wrap)').forEach(m => m.remove());
+
+        drawer.classList.add('open');
+        drawerOverlay.classList.add('open');
+        document.body.style.overflow = 'hidden';
+
+        sendDrawerMessage(null, `Explícame "${term}" de forma simple. Contexto: ${def}`);
+        drawerInput.focus();
+    }
+
+    function closeDrawer() {
+        drawer.classList.remove('open');
+        drawerOverlay.classList.remove('open');
+        document.body.style.overflow = '';
+    }
+
+    drawerClose.addEventListener('click', closeDrawer);
+    drawerOverlay.addEventListener('click', closeDrawer);
+
+    function addDrawerMsg(text, role) {
+        drawerTyping.style.display = 'none';
+        const msg    = document.createElement('div');
+        msg.className = 'drawer-msg ' + role;
+        const avatar = document.createElement('div');
+        avatar.className = 'drawer-avatar';
+        avatar.textContent = role === 'ai' ? '🤖' : '👤';
+        const bubble = document.createElement('div');
+        bubble.className = 'drawer-bubble';
+        bubble.textContent = text;
+        msg.appendChild(avatar);
+        msg.appendChild(bubble);
+        drawerMsgs.insertBefore(msg, drawerTyping);
+        drawerMsgs.scrollTop = drawerMsgs.scrollHeight;
+    }
+
+    async function sendDrawerMessage(userText, systemPrompt) {
+        if (userText) {
+            addDrawerMsg(userText, 'user');
+            drawerHistory.push({ role: 'user', content: userText });
         }
 
-        if (found === 0) {
-            noRes.style.display = 'block';
-            document.getElementById('search-term').textContent = query;
-        } else {
-            noRes.style.display = 'none';
+        const messages = systemPrompt
+            ? [{ role: 'user', content: systemPrompt }]
+            : drawerHistory;
+
+        drawerTyping.style.display = 'flex';
+        drawerSend.disabled = true;
+        drawerMsgs.scrollTop = drawerMsgs.scrollHeight;
+
+        try {
+            const res  = await fetch('{{ route('ai.message') }}', {
+                method:  'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                },
+                body: JSON.stringify({ messages }),
+            });
+
+            const data = await res.json();
+            const text = data.text || 'No pude responder en este momento.';
+            addDrawerMsg(text, 'ai');
+            drawerHistory.push({ role: 'assistant', content: text });
+
+        } catch (e) {
+            addDrawerMsg('Error al conectar con el asistente.', 'ai');
+        } finally {
+            drawerSend.disabled = false;
+            drawerInput.focus();
+        }
+    }
+
+    drawerSend.addEventListener('click', () => {
+        const text = drawerInput.value.trim();
+        if (!text) return;
+        drawerInput.value = '';
+        sendDrawerMessage(text, null);
+    });
+
+    drawerInput.addEventListener('keydown', e => {
+        if (e.key === 'Enter') {
+            const text = drawerInput.value.trim();
+            if (!text) return;
+            drawerInput.value = '';
+            sendDrawerMessage(text, null);
         }
     });
 </script>

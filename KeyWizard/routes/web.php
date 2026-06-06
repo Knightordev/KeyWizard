@@ -30,3 +30,11 @@ Route::post('/ai/apply',   [App\Http\Controllers\AiConsultorController::class, '
 
 Route::get('/validar', [CustodyController::class, 'validate'])->name('validate');
 Route::post('/validar', [CustodyController::class, 'doValidate'])->name('validate.check');
+
+Route::get('/test-ai', function () {
+    $service = new \App\Services\AiConsultorService();
+    $result  = $service->chat([
+        ['role' => 'user', 'content' => 'Hola, explícame qué es Bitcoin en una línea']
+    ]);
+    return response()->json($result);
+});

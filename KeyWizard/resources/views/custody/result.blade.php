@@ -335,6 +335,63 @@
         font-size: 13px;
         border-radius: var(--radius-sm);
     }
+
+    .next-steps-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-md);
+        border-radius: var(--radius);
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .next-steps-title {
+        font-family: 'Syne', sans-serif;
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 1.5rem;
+    }
+
+    .next-steps-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
+    }
+
+    .next-step-item {
+        display: flex;
+        gap: 14px;
+        align-items: flex-start;
+    }
+
+    .next-step-num {
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: var(--purple-dim);
+        border: 1px solid var(--purple-border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'DM Mono', monospace;
+        font-size: 11px;
+        color: var(--purple);
+        flex-shrink: 0;
+        margin-top: 2px;
+    }
+
+    .next-step-label {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 3px;
+    }
+
+    .next-step-desc {
+        font-size: 13px;
+        color: var(--text-muted);
+        line-height: 1.6;
+    }
 </style>
 @endpush
 
@@ -438,6 +495,53 @@
             <button class="btn btn-ghost" onclick="copyDescriptor()">
                 📋 Copiar descriptor
             </button>
+        </div>
+    </div>
+
+    <div class="next-steps-card">
+        <div class="next-steps-title">🗺️ ¿Y ahora qué?</div>
+        <div class="next-steps-grid">
+
+            <div class="next-step-item">
+                <div class="next-step-num">1</div>
+                <div>
+                    <div class="next-step-label">Descarga Sparrow Wallet</div>
+                    <div class="next-step-desc">Ve a <span class="mono">sparrowwallet.com</span> e instala la versión para tu sistema operativo. Es gratuito y de código abierto.</div>
+                </div>
+            </div>
+
+            <div class="next-step-item">
+                <div class="next-step-num">2</div>
+                <div>
+                    <div class="next-step-label">Importa tu descriptor</div>
+                    <div class="next-step-desc">Abre Sparrow → File → New Wallet → Output Descriptor. Pega el descriptor que copiaste y haz click en Apply.</div>
+                </div>
+            </div>
+
+            <div class="next-step-item">
+                <div class="next-step-num">3</div>
+                <div>
+                    <div class="next-step-label">Conecta tus hardware wallets</div>
+                    <div class="next-step-desc">Sparrow te pedirá conectar cada dispositivo para verificar las claves. Sigue las instrucciones en pantalla.</div>
+                </div>
+            </div>
+
+            <div class="next-step-item">
+                <div class="next-step-num">4</div>
+                <div>
+                    <div class="next-step-label">Guarda una copia de seguridad</div>
+                    <div class="next-step-desc">Exporta el archivo de la wallet desde Sparrow y guárdalo en un lugar seguro. Sin esto no podrás recuperar la bóveda si cambias de computadora.</div>
+                </div>
+            </div>
+
+            <div class="next-step-item">
+                <div class="next-step-num">5</div>
+                <div>
+                    <div class="next-step-label">Prueba con una cantidad pequeña</div>
+                    <div class="next-step-desc">Antes de mover fondos grandes, envía una cantidad pequeña, verifica que llegó y practica el proceso de firma con tus dispositivos.</div>
+                </div>
+            </div>
+
         </div>
     </div>
 

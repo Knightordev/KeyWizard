@@ -207,6 +207,181 @@
         font-size: 16px;
         border-radius: var(--radius);
     }
+
+    .xpub-explainer {
+        background: var(--bg-card);
+        border: 1px solid var(--border-md);
+        border-radius: var(--radius);
+        padding: 1.5rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .explainer-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 1.25rem;
+    }
+
+    .explainer-icon {
+        font-size: 24px;
+    }
+
+    .explainer-title {
+        font-family: 'Syne', sans-serif;
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 2px;
+    }
+
+    .explainer-subtitle {
+        font-size: 12px;
+        color: var(--text-dim);
+        font-family: 'DM Mono', monospace;
+    }
+
+    .explainer-analogy {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .analogy-item {
+        flex: 1;
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 1rem;
+        min-width: 180px;
+    }
+
+    .analogy-icon { font-size: 20px; flex-shrink: 0; }
+
+    .analogy-label {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 4px;
+    }
+
+    .analogy-desc {
+        font-size: 12px;
+        color: var(--text-muted);
+        line-height: 1.5;
+    }
+
+    .analogy-desc strong { color: var(--purple); }
+
+    .analogy-divider {
+        font-size: 20px;
+        color: var(--text-dim);
+        font-weight: 700;
+        flex-shrink: 0;
+    }
+
+    .safe-badge {
+        background: rgba(52,211,153,0.07);
+        border: 1px solid rgba(52,211,153,0.2);
+        border-radius: var(--radius-sm);
+        padding: 10px 14px;
+        font-size: 13px;
+        color: var(--green);
+    }
+
+    .device-guide {
+        background: var(--bg-card);
+        border: 1px solid var(--border-md);
+        border-radius: var(--radius);
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .device-guide-label {
+        font-family: 'DM Mono', monospace;
+        font-size: 11px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: var(--text-dim);
+        margin-bottom: 1rem;
+    }
+
+    .device-tabs {
+        display: flex;
+        gap: 6px;
+        margin-bottom: 1.25rem;
+        flex-wrap: wrap;
+    }
+
+    .device-tab {
+        background: var(--bg);
+        border: 1px solid var(--border-md);
+        border-radius: var(--radius-xs);
+        padding: 6px 14px;
+        font-size: 13px;
+        color: var(--text-muted);
+        cursor: pointer;
+        transition: all 0.15s;
+        font-family: 'DM Sans', sans-serif;
+    }
+
+    .device-tab:hover {
+        border-color: var(--purple);
+        color: var(--purple);
+    }
+
+    .device-tab.active {
+        background: var(--purple-dim);
+        border-color: var(--purple);
+        color: var(--purple);
+        font-weight: 600;
+    }
+
+    .device-content {
+        display: none;
+    }
+
+    .device-content.active {
+        display: block;
+    }
+
+    .guide-steps {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .guide-step {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        font-size: 13px;
+        color: var(--text-muted);
+        line-height: 1.5;
+    }
+
+    .guide-step-num {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: var(--purple-dim);
+        border: 1px solid var(--purple-border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'DM Mono', monospace;
+        font-size: 10px;
+        color: var(--purple);
+        flex-shrink: 0;
+        margin-top: 1px;
+    }
+
+    .guide-step strong { color: var(--text); }
 </style>
 @endpush
 
@@ -238,21 +413,127 @@
         <p>Pega las xpubs de tus hardware wallets. Necesitas {{ $totalKeys }} {{ $totalKeys === 1 ? 'clave' : 'claves' }} en total.</p>
     </div>
 
-    <div class="info-box">
-        <span class="info-icon">🔒</span>
-        <span>
-            Solo necesitas la <strong>clave pública</strong> (xpub), nunca la clave privada.
-            La xpub es segura de compartir y se obtiene desde tu hardware wallet.
-            <span class="tooltip-wrap">
-                <span class="tooltip-link">¿Cómo obtengo mi xpub?</span>
-                <div class="tooltip-box">
-                    En Ledger: Settings → Advanced → Show xpub.<br><br>
-                    En Trezor: Abre Trezor Suite → Cuenta → Mostrar clave pública.<br><br>
-                    En Coldcard: Advanced → XPub.
+    <div class="xpub-explainer">
+        <div class="explainer-header">
+            <div class="explainer-icon">🔑</div>
+            <div>
+                <div class="explainer-title">¿Qué es una clave pública (xpub)?</div>
+                <div class="explainer-subtitle">Lee esto antes de continuar — son 30 segundos</div>
+            </div>
+        </div>
+
+        <div class="explainer-analogy">
+            <div class="analogy-item">
+                <div class="analogy-icon">🏦</div>
+                <div>
+                    <div class="analogy-label">Clave pública (xpub)</div>
+                    <div class="analogy-desc">Es como tu <strong>número de cuenta bancaria</strong>. Puedes compartirla para recibir fondos. No permite gastar nada.</div>
                 </div>
-            </span>
-        </span>
+            </div>
+            <div class="analogy-divider">≠</div>
+            <div class="analogy-item">
+                <div class="analogy-icon">🔒</div>
+                <div>
+                    <div class="analogy-label">Clave privada</div>
+                    <div class="analogy-desc">Es tu <strong>contraseña secreta</strong>. Nunca la compartas. KeyWizard jamás te la pedirá.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="safe-badge">
+            ✅ Solo necesitas pegar la xpub — tu dinero no corre ningún riesgo al hacer esto
+        </div>
     </div>
+
+    <div class="device-guide">
+        <div class="device-guide-label">¿Cómo obtengo mi xpub?</div>
+        <div class="device-tabs">
+            <button class="device-tab active" data-device="ledger">Ledger</button>
+            <button class="device-tab" data-device="trezor">Trezor</button>
+            <button class="device-tab" data-device="coldcard">Coldcard</button>
+            <button class="device-tab" data-device="other">Otro</button>
+        </div>
+
+        <div class="device-content active" id="guide-ledger">
+            <div class="guide-steps">
+                <div class="guide-step">
+                    <div class="guide-step-num">1</div>
+                    <span>Conecta tu Ledger y abre <strong>Ledger Live</strong></span>
+                </div>
+                <div class="guide-step">
+                    <div class="guide-step-num">2</div>
+                    <span>Ve a tu cuenta Bitcoin → haz click en los <strong>3 puntos (...)</strong></span>
+                </div>
+                <div class="guide-step">
+                    <div class="guide-step-num">3</div>
+                    <span>Selecciona <strong>Edit account</strong> → Advanced</span>
+                </div>
+                <div class="guide-step">
+                    <div class="guide-step-num">4</div>
+                    <span>Copia el valor que empieza con <strong>xpub...</strong></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="device-content" id="guide-trezor">
+            <div class="guide-steps">
+                <div class="guide-step">
+                    <div class="guide-step-num">1</div>
+                    <span>Conecta tu Trezor y abre <strong>Trezor Suite</strong></span>
+                </div>
+                <div class="guide-step">
+                    <div class="guide-step-num">2</div>
+                    <span>Selecciona tu cuenta Bitcoin</span>
+                </div>
+                <div class="guide-step">
+                    <div class="guide-step-num">3</div>
+                    <span>Ve a <strong>Detalles de cuenta</strong> → Mostrar clave pública</span>
+                </div>
+                <div class="guide-step">
+                    <div class="guide-step-num">4</div>
+                    <span>Copia el valor que empieza con <strong>xpub...</strong></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="device-content" id="guide-coldcard">
+            <div class="guide-steps">
+                <div class="guide-step">
+                    <div class="guide-step-num">1</div>
+                    <span>En el menú principal ve a <strong>Advanced/Tools</strong></span>
+                </div>
+                <div class="guide-step">
+                    <div class="guide-step-num">2</div>
+                    <span>Selecciona <strong>Show Xpub</strong></span>
+                </div>
+                <div class="guide-step">
+                    <div class="guide-step-num">3</div>
+                    <span>Verás el xpub en pantalla — también puedes exportarlo por MicroSD</span>
+                </div>
+                <div class="guide-step">
+                    <div class="guide-step-num">4</div>
+                    <span>Copia el valor que empieza con <strong>xpub...</strong></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="device-content" id="guide-other">
+            <div class="guide-steps">
+                <div class="guide-step">
+                    <div class="guide-step-num">1</div>
+                    <span>Busca en tu wallet la opción <strong>"Mostrar clave pública"</strong> o <strong>"Export xpub"</strong></span>
+                </div>
+                <div class="guide-step">
+                    <div class="guide-step-num">2</div>
+                    <span>La xpub siempre empieza con <strong>xpub</strong>, <strong>ypub</strong> o <strong>zpub</strong></span>
+                </div>
+                <div class="guide-step">
+                    <div class="guide-step-num">3</div>
+                    <span>Es un texto largo de ~111 caracteres — cópialo completo</span>
+                </div>
+            </div>
+        </div>
+</div>
 
     @if($errors->any())
         <div class="alert-error">
@@ -308,6 +589,15 @@
 
 @push('scripts')
 <script>
+
+    document.querySelectorAll('.device-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.device-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.device-content').forEach(c => c.classList.remove('active'));
+            tab.classList.add('active');
+            document.getElementById('guide-' + tab.dataset.device).classList.add('active');
+        });
+    });
     const totalKeys = {{ $totalKeys }};
 
     for (let i = 0; i < totalKeys; i++) {

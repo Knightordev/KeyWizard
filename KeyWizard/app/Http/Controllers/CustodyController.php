@@ -81,7 +81,15 @@ class CustodyController extends Controller
             'xpubs.*.regex' => 'Una o más claves no tienen formato correcto (debe empezar con xpub, ypub o zpub).',
         ]);
 
-        session(['custody.xpubs' => $request->xpubs]);
+        $xpubs = array_map('trim', $request->xpubs);
+
+        if (count($xpubs) !== count(array_unique($xpubs))) {
+            return back()->withErrors([
+                'xpubs' => 'Hay claves públicas duplicadas. Cada llave debe ser única.',
+            ])->withInput();
+        }
+
+        session(['custody.xpubs' => $xpubs]);
 
         return redirect()->route('wizard.step4');
     }
