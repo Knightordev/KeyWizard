@@ -229,12 +229,12 @@
     </p>
 
     <div class="hero-actions">
-        <button class="btn btn-primary btn-lg">
+        <a href="{{ route('wizard.step1') }}" class="btn btn-primary btn-lg">
             Crear mi bóveda →
-        </button>
-        <button class="btn btn-ghost btn-lg">
+        </a>
+        <a href="{{ route('glossary') }}" class="btn btn-ghost btn-lg">
             ¿Qué es esto?
-        </button>
+        </a>
     </div>
 </section>
 

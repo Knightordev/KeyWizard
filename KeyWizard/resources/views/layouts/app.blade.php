@@ -11,15 +11,17 @@
 <body>
 
     <nav class="navbar">
-        <div class="navbar-brand">
-
-            <!-- <div class="navbar-logo">KW</div> -->
+    <div class="navbar-brand">
+        <a href="{{ route('home') }}" style="display:flex;align-items:center;gap:11px;text-decoration:none;">
+            <div class="navbar-logo">KW</div>
             <span class="navbar-name">Key<span>Wizard</span></span>
-        </div>
-        <div class="navbar-right">
-            The code Knights
-        </div>
-    </nav>
+        </a>
+    </div>
+    <div class="navbar-links">
+        <a href="{{ route('glossary') }}" class="nav-link">Glosario</a>
+        <a href="{{ route('wizard.step1') }}" class="nav-cta">Crear bóveda →</a>
+    </div>
+</nav>
 
     <main class="main">
         @yield('content')

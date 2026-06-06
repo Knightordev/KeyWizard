@@ -75,7 +75,7 @@ class CustodyController extends Controller
 
         $request->validate([
             'xpubs'   => 'required|array|size:' . $totalKeys,
-            'xpubs.*' => 'required|string|regex:/^(xpub|ypub|zpub)[a-zA-Z0-9]{100,}$/',
+            'xpubs.*' => ['required', 'string', 'regex:#^(xpub|ypub|zpub)[a-zA-Z0-9]{100,}$#'],
         ], [
             'xpubs.size'    => "Debes ingresar exactamente {$totalKeys} claves.",
             'xpubs.*.regex' => 'Una o más claves no tienen formato correcto (debe empezar con xpub, ypub o zpub).',

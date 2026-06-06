@@ -3,9 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CustodyController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [CustodyController::class, 'index'])->name('home');
 
 Route::get('/wizard/step1',  [CustodyController::class, 'step1'])->name('wizard.step1');
 Route::post('/wizard/step1', [CustodyController::class, 'saveStep1'])->name('wizard.step1.save');
