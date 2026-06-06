@@ -18,7 +18,7 @@ El problema que resuelve: configurar multisig en Sparrow requiere conocimientos 
 ## Demo
 
 ```
-http://localhost:8000
+http://127.0.0.1:8000
 ```
 
 Flujo completo:
@@ -115,7 +115,7 @@ php artisan serve
 npm run dev
 ```
 
-Visita `http://localhost:8000`
+Visita `http://127.0.0.1:8000`
 
 ### Obtener API key de Groq
 1. Regístrate en [console.groq.com](https://console.groq.com)
@@ -176,6 +176,10 @@ Compatibles con Sparrow Wallet, Liana y cualquier wallet que soporte BIP380.
 Desarrollado para el **Hackathon h2 · selfcustody-ui-challenge**
 Fecha de entrega: 8 de junio de 2026
 
+**Integrantes**
+Sofia Jimena Mezeta Castillo
+Héctor Iván Chumba Poot
+Yael Israel Pérez Espadas
 ---
 
 ## Licencia
