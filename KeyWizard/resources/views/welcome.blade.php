@@ -232,6 +232,9 @@
         <a href="{{ route('wizard.step1') }}" class="btn btn-primary btn-lg">
             Crear mi bóveda →
         </a>
+        <a href="{{ route('ai.index') }}" class="btn btn-ghost btn-lg">
+            🤖 Consultor IA
+        </a>
         <a href="{{ route('glossary') }}" class="btn btn-ghost btn-lg">
             ¿Qué es esto?
         </a>

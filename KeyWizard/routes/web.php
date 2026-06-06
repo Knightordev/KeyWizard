@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CustodyController;
+use App\Http\Controllers\AiConsultorController;
 
 Route::get('/', [CustodyController::class, 'index'])->name('home');
 
@@ -22,3 +23,15 @@ Route::get('/wizard/result', [CustodyController::class, 'result'])->name('wizard
 Route::get('/wizard/reset',  [CustodyController::class, 'reset'])->name('wizard.reset');
 
 Route::get('/glosario',      [CustodyController::class, 'glossary'])->name('glossary');
+
+Route::get('/ai',          [App\Http\Controllers\AiConsultorController::class, 'index'])->name('ai.index');
+Route::post('/ai/message', [App\Http\Controllers\AiConsultorController::class, 'message'])->name('ai.message');
+Route::post('/ai/apply',   [App\Http\Controllers\AiConsultorController::class, 'apply'])->name('ai.apply');
+
+Route::get('/test-ai', function () {
+    $service = new \App\Services\AiConsultorService();
+    $result  = $service->chat([
+        ['role' => 'user', 'content' => 'Hola, quiero una bóveda personal']
+    ]);
+    return response()->json($result);
+});

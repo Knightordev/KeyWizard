@@ -19,6 +19,7 @@
     </div>
     <div class="navbar-links">
         <a href="{{ route('glossary') }}" class="nav-link">Glosario</a>
+        <a href="{{ route('ai.index') }}" class="nav-link">🤖 Consultor IA</a>
         <a href="{{ route('wizard.step1') }}" class="nav-cta">Crear bóveda →</a>
     </div>
 </nav>
