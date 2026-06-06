@@ -382,6 +382,132 @@
     }
 
     .guide-step strong { color: var(--text); }
+
+    .lock-block-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-md);
+        border-radius: var(--radius);
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .lock-block-label {
+        font-family: 'Syne', sans-serif;
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 0.5rem;
+    }
+
+    .lock-block-desc {
+        font-size: 13px;
+        color: var(--text-muted);
+        margin-bottom: 1rem;
+        line-height: 1.6;
+    }
+
+    .lock-block-reference {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 0.5rem;
+    }
+
+    .lock-ref-item {
+        background: var(--purple-dim);
+        border: 1px solid var(--purple-border);
+        border-radius: var(--radius-xs);
+        padding: 6px 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .lock-ref-label {
+        font-size: 11px;
+        color: var(--text-dim);
+        font-family: 'DM Mono', monospace;
+    }
+
+    .lock-ref-value {
+        font-size: 12px;
+        color: var(--purple);
+        font-family: 'DM Mono', monospace;
+        font-weight: 600;
+    }
+    .xpub-meta {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin-top: 8px;
+    }
+
+    .xpub-meta-field {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .xpub-meta-label {
+        font-family: 'DM Mono', monospace;
+        font-size: 10px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: var(--text-dim);
+    }
+
+    .xpub-meta-input {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-xs);
+        padding: 7px 10px;
+        font-size: 11px;
+        font-family: 'DM Mono', monospace;
+        color: var(--text);
+        outline: none;
+        transition: border-color 0.15s;
+        width: 100%;
+    }
+
+    .xpub-meta-input:focus {
+        border-color: var(--purple);
+    }
+
+    .xpub-meta-input::placeholder {
+        color: var(--text-dim);
+    }
+
+    .import-file-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: var(--bg);
+        border: 1px dashed var(--border-md);
+        border-radius: var(--radius-xs);
+        padding: 5px 12px;
+        font-size: 12px;
+        color: var(--text-muted);
+        cursor: pointer;
+        transition: all 0.15s;
+        font-family: 'DM Sans', sans-serif;
+        margin-top: 8px;
+    }
+
+    .import-file-btn:hover {
+        border-color: var(--purple);
+        color: var(--purple);
+    }
+
+    .import-file-input {
+        display: none;
+    }
+
+    .xpub-meta-info {
+        font-size: 11px;
+        color: var(--text-dim);
+        margin-top: 6px;
+        font-family: 'DM Mono', monospace;
+    }
 </style>
 @endpush
 
@@ -410,7 +536,11 @@
     <div class="wizard-header" style="margin-top: 2.5rem;">
         <p class="wizard-step-label">Paso 3 de 4</p>
         <h1>Ingresa tus <span>claves públicas</span></h1>
-        <p>Pega las xpubs de tus hardware wallets. Necesitas {{ $totalKeys }} {{ $totalKeys === 1 ? 'clave' : 'claves' }} en total.</p>
+        @if(session('custody.purpose') === 'inheritance')
+            <p>Necesitas 2 claves: la tuya y la de tu heredero. Tu heredero solo podrá acceder después de 1 año sin actividad.</p>
+        @else
+            <p>Pega las xpubs de tus hardware wallets. Necesitas {{ $totalKeys }} {{ $totalKeys === 1 ? 'clave' : 'claves' }} en total.</p>
+        @endif
     </div>
 
     <div class="xpub-explainer">
@@ -543,7 +673,35 @@
 
     <form action="{{ route('wizard.step3.save') }}" method="POST">
         @csrf
-
+        @if(session('custody.purpose') === 'savings_lock')
+            <div class="lock-block-card">
+                <div class="lock-block-label">🔒 ¿Hasta qué bloque quieres bloquear tus fondos?</div>
+                <div class="lock-block-desc">El bloque actual de Bitcoin es aproximadamente 850,000. Cada bloque tarda ~10 minutos.</div>
+                <div class="lock-block-reference">
+                    <div class="lock-ref-item">
+                        <span class="lock-ref-label">~6 meses</span>
+                        <span class="lock-ref-value">+ 26,280 bloques</span>
+                    </div>
+                    <div class="lock-ref-item">
+                        <span class="lock-ref-label">~1 año</span>
+                        <span class="lock-ref-value">+ 52,560 bloques</span>
+                    </div>
+                    <div class="lock-ref-item">
+                        <span class="lock-ref-label">~2 años</span>
+                        <span class="lock-ref-value">+ 105,120 bloques</span>
+                    </div>
+                </div>
+                <input
+                    type="number"
+                    name="lock_block"
+                    class="input"
+                    placeholder="ej. 902560"
+                    min="850000"
+                    value="{{ old('lock_block', 902560) }}"
+                    style="margin-top: 0.75rem;"
+                >
+            </div>
+            @endif
         <div class="xpub-list">
             @for($i = 0; $i < $totalKeys; $i++)
             <div class="xpub-item" id="xpub-item-{{ $i }}">
@@ -552,14 +710,33 @@
                         <div class="xpub-num">{{ $i + 1 }}</div>
                         Llave {{ $i + 1 }}
                         @if($totalKeys > 1)
-                            @if($i === 0) — <span style="color:var(--text-muted);font-weight:400">Tu dispositivo principal</span>
-                            @elseif($i === 1) — <span style="color:var(--text-muted);font-weight:400">Dispositivo de respaldo</span>
-                            @else — <span style="color:var(--text-muted);font-weight:400">Dispositivo adicional</span>
+                            @if(session('custody.purpose') === 'inheritance')
+                                @if($i === 0) — <span style="color:var(--text-muted);font-weight:400">Tu llave (dueño)</span>
+                                @else — <span style="color:var(--text-muted);font-weight:400">Llave del heredero</span>
+                                @endif
+                            @else
+                                @if($i === 0) — <span style="color:var(--text-muted);font-weight:400">Tu dispositivo principal</span>
+                                @elseif($i === 1) — <span style="color:var(--text-muted);font-weight:400">Dispositivo de respaldo</span>
+                                @else — <span style="color:var(--text-muted);font-weight:400">Dispositivo adicional</span>
+                                @endif
                             @endif
                         @endif
                     </div>
-                    <span class="xpub-status" id="status-{{ $i }}">pendiente</span>
+                    <div style="display:flex;align-items:center;gap:8px;">
+                        <label class="import-file-btn" for="file-import-{{ $i }}">
+                            📁 Importar JSON
+                            <input
+                                type="file"
+                                class="import-file-input"
+                                id="file-import-{{ $i }}"
+                                accept=".json"
+                                data-index="{{ $i }}"
+                            >
+                        </label>
+                        <span class="xpub-status" id="status-{{ $i }}">pendiente</span>
+                    </div>
                 </div>
+
                 <textarea
                     class="xpub-input"
                     name="xpubs[{{ $i }}]"
@@ -568,6 +745,37 @@
                     spellcheck="false"
                     autocomplete="off"
                 >{{ old("xpubs.{$i}") }}</textarea>
+
+                <div class="xpub-meta">
+                    <div class="xpub-meta-field">
+                        <span class="xpub-meta-label">Fingerprint <span style="opacity:0.5">(opcional)</span></span>
+                        <input
+                            type="text"
+                            class="xpub-meta-input"
+                            name="fingerprints[{{ $i }}]"
+                            id="fingerprint-{{ $i }}"
+                            placeholder="a1b2c3d4"
+                            maxlength="8"
+                            spellcheck="false"
+                            autocomplete="off"
+                            value="{{ old("fingerprints.{$i}") }}"
+                        >
+                    </div>
+                    <div class="xpub-meta-field">
+                        <span class="xpub-meta-label">Derivation path <span style="opacity:0.5">(opcional)</span></span>
+                        <input
+                            type="text"
+                            class="xpub-meta-input"
+                            name="derivations[{{ $i }}]"
+                            id="derivation-{{ $i }}"
+                            placeholder="m/48'/0'/0'/2'"
+                            spellcheck="false"
+                            autocomplete="off"
+                            value="{{ old("derivations.{$i}") }}"
+                        >
+                    </div>
+                </div>
+                <div class="xpub-meta-info" id="meta-info-{{ $i }}"></div>
             </div>
             @endfor
         </div>
@@ -597,7 +805,8 @@
             document.getElementById('guide-' + tab.dataset.device).classList.add('active');
         });
     });
-const totalKeys = {{ $totalKeys }};
+
+    const totalKeys = {{ $totalKeys }};
     const inputs    = [];
 
     for (let i = 0; i < totalKeys; i++) {
@@ -645,9 +854,42 @@ const totalKeys = {{ $totalKeys }};
 
     inputs.forEach(input => {
         input.addEventListener('input', validateAll);
-        if (input.value.trim().length > 0) {
-            validateAll();
-        }
+        if (input.value.trim().length > 0) validateAll();
+    });
+
+    document.querySelectorAll('.import-file-input').forEach(fileInput => {
+        fileInput.addEventListener('change', (e) => {
+            const idx    = parseInt(e.target.dataset.index);
+            const file   = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                try {
+                    const data = JSON.parse(ev.target.result);
+                    const metaInfo = document.getElementById('meta-info-' + idx);
+
+                    const xpub        = data.xpub        || data.ExtPubKey     || data.accountKey   || '';
+                    const fingerprint = data.fingerprint  || data.MasterFingerprint || data.master_fingerprint || '';
+                    const derivation  = data.derivation   || data.AccountKeyPath   || data.derivationPath     || "m/48'/0'/0'/2'";
+
+                    if (xpub) {
+                        document.getElementById('xpub-' + idx).value        = xpub.trim();
+                        document.getElementById('fingerprint-' + idx).value = fingerprint.toString().toLowerCase().slice(0, 8);
+                        document.getElementById('derivation-' + idx).value  = derivation;
+
+                        metaInfo.innerHTML = `<span style="color:var(--green)">✓ Importado desde ${file.name}</span>`;
+                        validateAll();
+                    } else {
+                        metaInfo.innerHTML = `<span style="color:var(--red)">✗ No se encontró xpub en el archivo</span>`;
+                    }
+                } catch (err) {
+                    document.getElementById('meta-info-' + idx).innerHTML =
+                        `<span style="color:var(--red)">✗ Archivo JSON inválido</span>`;
+                }
+            };
+            reader.readAsText(file);
+        });
     });
 </script>
 @endpush

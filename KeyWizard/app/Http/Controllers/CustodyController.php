@@ -20,7 +20,7 @@ class CustodyController extends Controller
     public function saveStep1(Request $request)
     {
         $request->validate([
-            'purpose' => 'required|in:personal,family,business,savings,inheritance',
+            'purpose' => 'required|in:personal,family,business,savings,inheritance,savings_lock',
         ]);
 
         session(['custody.purpose' => $request->purpose]);
@@ -32,6 +32,16 @@ class CustodyController extends Controller
     {
         if (!session('custody.purpose')) {
             return redirect()->route('wizard.step1');
+        }
+
+        $purpose = session('custody.purpose');
+
+        if (in_array($purpose, ['inheritance', 'savings_lock'])) {
+            session([
+                'custody.total_keys' => 2,
+                'custody.threshold'  => 1,
+            ]);
+            return redirect()->route('wizard.step3');
         }
 
         return view('custody.step2');
@@ -89,6 +99,18 @@ class CustodyController extends Controller
             ])->withInput();
         }
 
+        if (session('custody.purpose') === 'savings_lock' && $request->filled('lock_block')) {
+            session(['custody.lock_block' => (int) $request->lock_block]);
+        }
+        if (session('custody.purpose') === 'savings_lock' && $request->filled('lock_block')) {
+            session(['custody.lock_block' => (int) $request->lock_block]);
+        }
+
+        session([
+            'custody.xpubs'        => $xpubs,
+            'custody.fingerprints' => $request->input('fingerprints', []),
+            'custody.derivations'  => $request->input('derivations', []),
+        ]);
         session(['custody.xpubs' => $xpubs]);
 
         return redirect()->route('wizard.step4');
@@ -106,11 +128,13 @@ class CustodyController extends Controller
         $scenarios = $this->buildScenarios($threshold, $totalKeys);
 
         $data = [
-            'purpose'    => session('custody.purpose'),
-            'total_keys' => $totalKeys,
-            'threshold'  => $threshold,
-            'xpubs'      => session('custody.xpubs'),
-            'scenarios'  => $scenarios,
+            'purpose'      => session('custody.purpose'),
+            'total_keys'   => $totalKeys,
+            'threshold'    => $threshold,
+            'xpubs'        => session('custody.xpubs'),
+            'fingerprints' => session('custody.fingerprints', []),
+            'derivations'  => session('custody.derivations', []),
+            'scenarios'    => $scenarios,
         ];
 
         return view('custody.step4', compact('data'));
@@ -122,14 +146,26 @@ class CustodyController extends Controller
             return redirect()->route('wizard.step1');
         }
 
-        $builder     = new DescriptorBuilder();
-        $threshold   = session('custody.threshold');
-        $totalKeys   = session('custody.total_keys');
-        $xpubs       = session('custody.xpubs');
+        $builder   = new DescriptorBuilder();
+        $threshold = session('custody.threshold');
+        $totalKeys = session('custody.total_keys');
+        $xpubs     = session('custody.xpubs');
+        $purpose   = session('custody.purpose');
 
-        $descriptor  = $builder->build($threshold, $xpubs);
-        $descripcion = $builder->describe($threshold, $totalKeys);
-        $score       = $builder->securityScore($threshold, $totalKeys, session('custody.purpose'));
+        if ($purpose === 'inheritance') {
+            $blocks      = 52560;
+            $descriptor  = $builder->buildTimelockRelative($xpubs[0], $xpubs[1], $blocks);
+            $descripcion = $builder->describeTimelockRelative($blocks);
+        } elseif ($purpose === 'savings_lock') {
+            $block       = session('custody.lock_block', 850000);
+            $descriptor  = $builder->buildTimelockAbsolute($xpubs[0], $xpubs[1], $block);
+            $descripcion = $builder->describeTimelockAbsolute($block);
+        } else {
+            $descriptor  = $builder->build($threshold, $xpubs);
+            $descripcion = $builder->describe($threshold, $totalKeys);
+        }
+
+        $score = $builder->securityScore($threshold, $totalKeys, $purpose);
 
         session([
             'custody.descriptor'  => $descriptor,

@@ -253,7 +253,23 @@
                 @foreach($data['xpubs'] as $i => $xpub)
                 <div class="xpub-row">
                     <div class="xpub-row-num">{{ $i + 1 }}</div>
-                    <div class="xpub-row-value">{{ $xpub }}</div>
+                    <div style="flex:1;min-width:0;">
+                        <div class="xpub-row-value">{{ $xpub }}</div>
+                        @if(!empty($data['fingerprints'][$i]) || !empty($data['derivations'][$i]))
+                        <div style="display:flex;gap:12px;margin-top:4px;flex-wrap:wrap;">
+                            @if(!empty($data['fingerprints'][$i]))
+                            <span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text-dim);">
+                                fp: {{ $data['fingerprints'][$i] }}
+                            </span>
+                            @endif
+                            @if(!empty($data['derivations'][$i]))
+                            <span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text-dim);">
+                                path: {{ $data['derivations'][$i] }}
+                            </span>
+                            @endif
+                        </div>
+                        @endif
+                    </div>
                 </div>
                 @endforeach
             </div>

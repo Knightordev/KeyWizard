@@ -408,9 +408,11 @@
         infoGrid.innerHTML = '';
         if (data.info && Object.keys(data.info).length > 0) {
             const items = [
-                { label: 'Tipo',           value: data.info.type_label ?? '—' },
-                { label: 'Política',       value: `<span>${data.info.threshold ?? '—'}</span> de ${data.info.total_keys ?? '—'} llaves` },
-                { label: 'Total de llaves', value: data.info.total_keys ?? '—' },
+                { label: 'Tipo',              value: data.info.type_label ?? '—' },
+                { label: 'Política',          value: data.info.timelock_label
+                    ? data.info.timelock_label
+                    : `<span>${data.info.threshold ?? '—'}</span> de ${data.info.total_keys ?? '—'} llaves` },
+                { label: 'Total de llaves',   value: data.info.total_keys ?? '—' },
                 { label: 'Firmas requeridas', value: `<span>${data.info.threshold ?? '—'}</span>` },
             ];
             infoGrid.innerHTML = items.map(i => `

@@ -208,12 +208,20 @@
                 <div class="option-desc">Fondos a largo plazo con máxima seguridad y mínimo movimiento.</div>
             </label>
 
-            <label class="option-card {{ old('purpose') === 'inheritance' ? 'selected' : '' }}" for="purpose_inheritance" style="grid-column: span 2;">
+            <label class="option-card {{ old('purpose') === 'inheritance' ? 'selected' : '' }}" for="purpose_inheritance">
                 <input type="radio" name="purpose" id="purpose_inheritance" value="inheritance" {{ old('purpose') === 'inheritance' ? 'checked' : '' }}>
                 <div class="option-check"></div>
                 <div class="option-emoji">🤝</div>
                 <div class="option-title">Herencia</div>
-                <div class="option-desc">Configura una política de recuperación para que tu familia pueda acceder a tus fondos si algo te pasa. Modo especial de custodia compartida.</div>
+                <div class="option-desc">Tu heredero puede recuperar los fondos si no hay actividad por <strong>1 año</strong>. Usa timelock relativo.</div>
+            </label>
+
+            <label class="option-card {{ old('purpose') === 'savings_lock' ? 'selected' : '' }}" for="purpose_savings_lock">
+                <input type="radio" name="purpose" id="purpose_savings_lock" value="savings_lock" {{ old('purpose') === 'savings_lock' ? 'checked' : '' }}>
+                <div class="option-check"></div>
+                <div class="option-emoji">🔐</div>
+                <div class="option-title">Ahorro bloqueado</div>
+                <div class="option-desc">Bloquea tus fondos hasta un bloque específico de Bitcoin. Nadie puede moverlos antes. Usa timelock absoluto.</div>
             </label>
 
         </div>

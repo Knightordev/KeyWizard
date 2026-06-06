@@ -102,11 +102,14 @@ class DescriptorBuilder
             return ['valid' => false, 'errors' => ['El descriptor está vacío.']];
         }
 
-        $isSingle = str_starts_with($descriptor, 'wpkh(');
-        $isMulti  = str_starts_with($descriptor, 'wsh(multi(');
+        $isSingle    = str_starts_with($descriptor, 'wpkh(');
+        $isMulti     = str_starts_with($descriptor, 'wsh(multi(');
+        $isAndorOlder = str_contains($descriptor, 'older(');
+        $isAndorAfter = str_contains($descriptor, 'after(');
+        $isTimelock  = $isAndorOlder || $isAndorAfter;
 
-        if (!$isSingle && !$isMulti) {
-            $errors[] = 'El descriptor debe comenzar con wpkh( o wsh(multi(.';
+        if (!$isSingle && !$isMulti && !$isTimelock) {
+            $errors[] = 'El descriptor debe comenzar con wpkh(, wsh(multi(, o contener andor() con timelock.';
         }
 
         if ($isSingle) {
@@ -141,30 +144,75 @@ class DescriptorBuilder
             }
         }
 
-        if (!str_contains($descriptor, '/0/*')) {
+        if ($isTimelock && !$isMulti) {
+            if ($isAndorOlder) {
+                $info['type']       = 'timelock_relative';
+                $info['type_label'] = 'Timelock relativo (herencia)';
+
+                preg_match('/older\((\d+)\)/', $descriptor, $mBlocks);
+                $blocks = isset($mBlocks[1]) ? (int) $mBlocks[1] : 0;
+                $years  = round($blocks / 52560, 1);
+
+                $info['timelock_blocks'] = $blocks;
+                $info['timelock_label']  = "~{$years} año(s) ({$blocks} bloques)";
+                $info['threshold']       = 1;
+                $info['total_keys']      = 2;
+
+            } elseif ($isAndorAfter) {
+                $info['type']       = 'timelock_absolute';
+                $info['type_label'] = 'Timelock absoluto (ahorro bloqueado)';
+
+                preg_match('/after\((\d+)\)/', $descriptor, $mBlock);
+                $block = isset($mBlock[1]) ? (int) $mBlock[1] : 0;
+
+                $info['timelock_block'] = $block;
+                $info['timelock_label'] = "Bloqueado hasta bloque {$block}";
+                $info['threshold']      = 1;
+                $info['total_keys']     = 2;
+            }
+
+            if (!str_contains($descriptor, 'andor(')) {
+                $errors[] = 'El descriptor de timelock debe usar andor() para combinar las condiciones.';
+            }
+        }
+
+        if (!$isTimelock && !str_contains($descriptor, '/0/*')) {
             $errors[] = 'Falta la ruta de derivación /0/* en las claves.';
         }
 
         $valid = empty($errors);
 
         $score = [];
-        if ($valid && $isMulti) {
-            $score = $this->securityScore(
-                $info['threshold'],
-                $info['total_keys'],
-                'personal'
-            );
-        } elseif ($valid && $isSingle) {
-            $score = [
-                'score'  => 15,
-                'label'  => 'Mínima',
-                'checks' => [
-                    ['label' => 'Multifirma activa',       'pass' => false],
-                    ['label' => 'Requiere más de 1 firma', 'pass' => false],
-                    ['label' => 'Redundancia de llaves',   'pass' => false],
-                    ['label' => 'Tolerancia a pérdida',    'pass' => false],
-                ],
-            ];
+        if ($valid) {
+            if ($isMulti) {
+                $score = $this->securityScore(
+                    $info['threshold'],
+                    $info['total_keys'],
+                    'personal'
+                );
+            } elseif ($isSingle) {
+                $score = [
+                    'score'  => 15,
+                    'label'  => 'Mínima',
+                    'checks' => [
+                        ['label' => 'Multifirma activa',       'pass' => false],
+                        ['label' => 'Requiere más de 1 firma', 'pass' => false],
+                        ['label' => 'Redundancia de llaves',   'pass' => false],
+                        ['label' => 'Tolerancia a pérdida',    'pass' => false],
+                    ],
+                ];
+            } elseif ($isTimelock) {
+                $score = [
+                    'score'  => 90,
+                    'label'  => 'Excelente',
+                    'checks' => [
+                        ['label' => 'Multifirma activa',       'pass' => true],
+                        ['label' => 'Requiere más de 1 firma', 'pass' => false],
+                        ['label' => 'Timelock activo',         'pass' => true],
+                        ['label' => 'Tolerancia a pérdida',    'pass' => true],
+                    ],
+                ];
+            }
         }
 
         return [
@@ -174,5 +222,28 @@ class DescriptorBuilder
             'score'  => $score,
         ];
     }
-    
+    public function buildTimelockRelative(string $xpubOwner, string $xpubHeir, int $blocks = 52560): string
+    {
+        $owner = trim($xpubOwner) . '/0/*';
+        $heir  = trim($xpubHeir)  . '/0/*';
+        return "wsh(andor(pk({$owner}),older({$blocks}),pk({$heir})))";
+    }
+
+    public function buildTimelockAbsolute(string $xpubOwner, string $xpubHeir, int $block = 850000): string
+    {
+        $owner = trim($xpubOwner) . '/0/*';
+        $heir  = trim($xpubHeir)  . '/0/*';
+        return "wsh(andor(pk({$owner}),after({$block}),pk({$heir})))";
+    }
+
+    public function describeTimelockRelative(int $blocks): string
+    {
+        $years = round($blocks / 52560, 1);
+        return "Herencia relativa — tú controlas los fondos siempre. Tu heredero puede acceder solo si no hay actividad por {$years} año(s) (~{$blocks} bloques).";
+    }
+
+    public function describeTimelockAbsolute(int $block): string
+    {
+        return "Ahorro bloqueado — los fondos quedan bloqueados hasta el bloque {$block} de la red Bitcoin. Nadie puede moverlos antes de esa fecha.";
+    }
 }

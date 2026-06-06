@@ -420,6 +420,52 @@
     .pill-divider {
         opacity: 0.4;
     }
+
+    .timelock-info {
+        background: rgba(167,139,250,0.05);
+        border: 1px solid var(--purple-border);
+        border-radius: var(--radius-sm);
+        padding: 1.25rem;
+        margin-top: 1rem;
+    }
+
+    .timelock-header {
+        font-family: 'Syne', sans-serif;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--purple);
+        margin-bottom: 1rem;
+    }
+
+    .timelock-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .timelock-item {
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+    }
+
+    .timelock-icon {
+        font-size: 18px;
+        flex-shrink: 0;
+    }
+
+    .timelock-label {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 2px;
+    }
+
+    .timelock-desc {
+        font-size: 12px;
+        color: var(--text-muted);
+        line-height: 1.5;
+    }
 </style>
 @endpush
 
@@ -464,6 +510,63 @@
         <div class="descriptor-body">
             <div class="descriptor-text" id="descriptor-value">{{ $data['descriptor'] }}</div>
             <div class="descriptor-desc">{{ $data['descripcion'] }}</div>
+            @php $purpose = session('custody.purpose'); @endphp
+
+            @if($purpose === 'inheritance')
+            <div class="timelock-info">
+                <div class="timelock-header">⏳ Timelock Relativo — Herencia</div>
+                <div class="timelock-grid">
+                    <div class="timelock-item">
+                        <div class="timelock-icon">👤</div>
+                        <div>
+                            <div class="timelock-label">Tú — acceso inmediato siempre</div>
+                            <div class="timelock-desc">Puedes mover tus fondos en cualquier momento con tu llave. Sin restricciones.</div>
+                        </div>
+                    </div>
+                    <div class="timelock-item">
+                        <div class="timelock-icon">👨‍👩‍👧</div>
+                        <div>
+                            <div class="timelock-label">Tu heredero — acceso después de 1 año</div>
+                            <div class="timelock-desc">Si no hay actividad por 52,560 bloques (~1 año), tu heredero puede recuperar los fondos con su llave.</div>
+                        </div>
+                    </div>
+                    <div class="timelock-item">
+                        <div class="timelock-icon">🔄</div>
+                        <div>
+                            <div class="timelock-label">Para renovar el timelock</div>
+                            <div class="timelock-desc">Mueve una cantidad pequeña cada año para reiniciar el contador. Liana automatiza esto.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @elseif($purpose === 'savings_lock')
+            <div class="timelock-info">
+                <div class="timelock-header">📅 Timelock Absoluto — Ahorro bloqueado</div>
+                <div class="timelock-grid">
+                    <div class="timelock-item">
+                        <div class="timelock-icon">🔒</div>
+                        <div>
+                            <div class="timelock-label">Fondos bloqueados hasta el bloque {{ session('custody.lock_block', 850000) }}</div>
+                            <div class="timelock-desc">Nadie puede mover estos fondos antes de que la red Bitcoin alcance ese bloque. Ni tú.</div>
+                        </div>
+                    </div>
+                    <div class="timelock-item">
+                        <div class="timelock-icon">✅</div>
+                        <div>
+                            <div class="timelock-label">Después del bloque — acceso normal</div>
+                            <div class="timelock-desc">Una vez alcanzado el bloque, puedes mover los fondos normalmente con tu llave.</div>
+                        </div>
+                    </div>
+                    <div class="timelock-item">
+                        <div class="timelock-icon">⚠️</div>
+                        <div>
+                            <div class="timelock-label">Esto es irreversible</div>
+                            <div class="timelock-desc">Una vez que envíes fondos a esta bóveda, no podrás recuperarlos antes del bloque objetivo. Úsalo con cautela.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endif
         </div>
     </div>
 
