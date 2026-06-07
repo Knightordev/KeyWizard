@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'KeyWizard — Glosario')
+@section('title', 'KeyWizard - Glosario')
 
 @push('styles')
 <style>

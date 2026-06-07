@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'KeyWizard — Validar descriptor')
+@section('title', 'KeyWizard - Validar descriptor')
 
 @push('styles')
 <style>

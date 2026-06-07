@@ -36,7 +36,7 @@ class CustodyController extends Controller
 
         $purpose = session('custody.purpose');
 
-        if (in_array($purpose, ['inheritance', 'savings_lock', 'taproot'])) {
+        if (in_array($purpose, ['inheritance', 'savings_lock'])) {
             session([
                 'custody.total_keys' => 2,
                 'custody.threshold'  => 1,

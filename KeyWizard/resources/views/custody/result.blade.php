@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'KeyWizard — Tu descriptor')
+@section('title', 'KeyWizard - Tu descriptor')
 
 @push('styles')
 <style>

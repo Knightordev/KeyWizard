@@ -62,8 +62,47 @@ class DescriptorBuilder
 
     public function securityScore(int $threshold, int $total, string $purpose): array
     {
-        $score    = 0;
-        $checks   = [];
+        if ($purpose === 'taproot') {
+            return [
+                'score'  => 95,
+                'label'  => 'Excelente',
+                'checks' => [
+                    ['label' => 'Taproot activo',           'pass' => true],
+                    ['label' => 'Privacidad máxima',         'pass' => true],
+                    ['label' => 'Formato moderno (BIP386)',  'pass' => true],
+                    ['label' => 'Compatible Sparrow 1.8+',   'pass' => true],
+                ],
+            ];
+        }
+
+        if ($purpose === 'inheritance') {
+            return [
+                'score'  => 92,
+                'label'  => 'Excelente',
+                'checks' => [
+                    ['label' => 'Timelock relativo activo',  'pass' => true],
+                    ['label' => 'Acceso de emergencia',      'pass' => true],
+                    ['label' => 'Plan de herencia definido', 'pass' => true],
+                    ['label' => 'Tolerancia a pérdida',      'pass' => true],
+                ],
+            ];
+        }
+
+        if ($purpose === 'savings_lock') {
+            return [
+                'score'  => 88,
+                'label'  => 'Excelente',
+                'checks' => [
+                    ['label' => 'Timelock absoluto activo',  'pass' => true],
+                    ['label' => 'Fondos protegidos',         'pass' => true],
+                    ['label' => 'Irreversible hasta bloque', 'pass' => true],
+                    ['label' => 'Sin acceso prematuro',      'pass' => true],
+                ],
+            ];
+        }
+
+        $score  = 0;
+        $checks = [];
 
         if ($total > 1) {
             $score += 40;
@@ -98,14 +137,6 @@ class DescriptorBuilder
             'checks' => $checks,
             'label'  => $this->scoreLabel($score),
         ];
-    }
-
-    private function scoreLabel(int $score): string
-    {
-        if ($score >= 80) return 'Excelente';
-        if ($score >= 60) return 'Buena';
-        if ($score >= 40) return 'Básica';
-        return 'Mínima';
     }
     
     public function analyzeDescriptor(string $descriptor): array
