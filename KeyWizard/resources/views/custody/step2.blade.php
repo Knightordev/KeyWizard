@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'KeyWizard — Paso 2')
+@section('title', 'KeyWizard - Paso 2')
 
 @push('styles')
 <style>

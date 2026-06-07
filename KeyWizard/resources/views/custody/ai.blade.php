@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'KeyWizard — Consultor IA')
+@section('title', 'KeyWizard - Consultor IA')
 
 @push('styles')
 <style>
