@@ -63,7 +63,7 @@ html, body {
     height: 66px;
     background: rgb(236, 229, 244);
     border-bottom: 1px solid var(--border-md);
-    position: relative;
+    position: sticky;
     top: 0;
     z-index: 100;
 
