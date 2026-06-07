@@ -4,28 +4,44 @@ namespace App\Services;
 
 class DescriptorBuilder
 {
-    public function build(int $threshold, array $xpubs): string
+    public function build(int $threshold, array $xpubs, array $fingerprints = [], array $derivations = []): string
     {
         $xpubs = array_map('trim', $xpubs);
 
         if (count($xpubs) === 1 && $threshold === 1) {
-            return $this->single($xpubs[0]);
+            return $this->single($xpubs[0], $fingerprints[0] ?? '', $derivations[0] ?? '');
         }
 
-        return $this->multi($threshold, $xpubs);
+        return $this->multi($threshold, $xpubs, $fingerprints, $derivations);
     }
 
-    private function single(string $xpub): string
+    private function formatKey(string $xpub, string $fingerprint = '', string $derivation = ''): string
     {
-        return "wpkh({$xpub}/0/*)";
+        $xpub = trim($xpub);
+
+        if (!empty($fingerprint) && !empty($derivation)) {
+            $derivation = ltrim($derivation, 'm/');
+            return "[{$fingerprint}/{$derivation}]{$xpub}/0/*";
+        }
+
+        return "{$xpub}/0/*";
     }
 
-    private function multi(int $threshold, array $xpubs): string
+    private function single(string $xpub, string $fingerprint = '', string $derivation = ''): string
     {
-        $keys = implode(',', array_map(fn($x) => "{$x}/0/*", $xpubs));
-        return "wsh(multi({$threshold},{$keys}))";
+        $key = $this->formatKey($xpub, $fingerprint, $derivation);
+        return "wpkh({$key})";
     }
 
+    private function multi(int $threshold, array $xpubs, array $fingerprints = [], array $derivations = []): string
+    {
+        $keys = [];
+        foreach ($xpubs as $i => $xpub) {
+            $keys[] = $this->formatKey($xpub, $fingerprints[$i] ?? '', $derivations[$i] ?? '');
+        }
+        $keysStr = implode(',', $keys);
+        return "wsh(multi({$threshold},{$keysStr}))";
+    }
     public function validate(string $xpub): bool
     {
         return (bool) preg_match('/^(xpub|ypub|zpub)[a-zA-Z0-9]{100,}$/', trim($xpub));
@@ -250,17 +266,17 @@ class DescriptorBuilder
             'score'  => $score,
         ];
     }
-    public function buildTimelockRelative(string $xpubOwner, string $xpubHeir, int $blocks = 52560): string
+    public function buildTimelockRelative(string $xpubOwner, string $xpubHeir, int $blocks = 52560, string $fpOwner = '', string $pathOwner = '', string $fpHeir = '', string $pathHeir = ''): string
     {
-        $owner = trim($xpubOwner) . '/0/*';
-        $heir  = trim($xpubHeir)  . '/0/*';
+        $owner = $this->formatKey($xpubOwner, $fpOwner, $pathOwner);
+        $heir  = $this->formatKey($xpubHeir,  $fpHeir,  $pathHeir);
         return "wsh(andor(pk({$owner}),older({$blocks}),pk({$heir})))";
     }
 
-    public function buildTimelockAbsolute(string $xpubOwner, string $xpubHeir, int $block = 850000): string
+    public function buildTimelockAbsolute(string $xpubOwner, string $xpubHeir, int $block = 850000, string $fpOwner = '', string $pathOwner = '', string $fpHeir = '', string $pathHeir = ''): string
     {
-        $owner = trim($xpubOwner) . '/0/*';
-        $heir  = trim($xpubHeir)  . '/0/*';
+        $owner = $this->formatKey($xpubOwner, $fpOwner, $pathOwner);
+        $heir  = $this->formatKey($xpubHeir,  $fpHeir,  $pathHeir);
         return "wsh(andor(pk({$owner}),after({$block}),pk({$heir})))";
     }
 
@@ -281,11 +297,15 @@ class DescriptorBuilder
         return "tr({$key})";
     }
 
-    public function buildTaprootMulti(string $xpubInternal, array $xpubs, int $threshold): string
+    public function buildTaprootMulti(string $xpubInternal, array $xpubs, int $threshold, array $fingerprints = [], array $derivations = []): string
     {
         $internal = trim($xpubInternal) . '/0/*';
-        $keys     = implode(',', array_map(fn($x) => trim($x) . '/0/*', $xpubs));
-        return "tr({$internal},multi_a({$threshold},{$keys}))";
+        $keys     = [];
+        foreach ($xpubs as $i => $xpub) {
+            $keys[] = $this->formatKey($xpub, $fingerprints[$i] ?? '', $derivations[$i] ?? '');
+        }
+        $keysStr = implode(',', $keys);
+        return "tr({$internal},multi_a({$threshold},{$keysStr}))";
     }
 
     public function buildTaprootTimelock(string $xpubInternal, string $xpubOwner, string $xpubHeir, int $blocks = 52560): string
@@ -304,5 +324,66 @@ class DescriptorBuilder
             'timelock' => 'Taproot con timelock — herencia con privacidad total. Usa el protocolo más moderno de Bitcoin.',
             default    => 'Descriptor Taproot.',
         };
+    }
+
+    public function selfValidate(string $descriptor): bool
+    {
+        if (empty($descriptor)) return false;
+
+        $key     = '((\[[a-fA-F0-9]{8}\/[0-9\'\/]+\])?(xpub|ypub|zpub)[a-zA-Z0-9]+\/0\/\*)';
+        $keyList = "({$key}(,{$key})*)";
+
+        $patterns = [
+            'wpkh'           => "/^wpkh\({$key}\)$/",
+            'wsh_multi'      => "/^wsh\(multi\(\d+,{$keyList}\)\)$/",
+            'timelock_older' => "/^wsh\(andor\(pk\({$key}\),older\(\d+\),pk\({$key}\)\)\)$/",
+            'timelock_after' => "/^wsh\(andor\(pk\({$key}\),after\(\d+\),pk\({$key}\)\)\)$/",
+            'taproot_single' => "/^tr\({$key}\)$/",
+            'taproot_multi'  => "/^tr\({$key},multi_a\(\d+,{$keyList}\)\)$/",
+        ];
+
+        foreach ($patterns as $pattern) {
+            if (preg_match($pattern, $descriptor)) return true;
+        }
+
+        return false;
+    }
+
+    public function validateXpubChecksum(string $xpub): bool
+    {
+        $xpub = trim($xpub);
+
+        $alphabet = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+        $base     = strlen($alphabet);
+
+        $decoded  = gmp_init(0);
+        $multi    = gmp_init(1);
+
+        for ($i = strlen($xpub) - 1; $i >= 0; $i--) {
+            $pos = strpos($alphabet, $xpub[$i]);
+            if ($pos === false) return false;
+            $decoded = gmp_add($decoded, gmp_mul(gmp_init($pos), $multi));
+            $multi   = gmp_mul($multi, gmp_init($base));
+        }
+
+        $hex = gmp_strval($decoded, 16);
+        if (strlen($hex) % 2 !== 0) $hex = '0' . $hex;
+
+        $leadingZeros = 0;
+        foreach (str_split($xpub) as $char) {
+            if ($char !== '1') break;
+            $leadingZeros++;
+        }
+
+        $hex   = str_repeat('00', $leadingZeros) . $hex;
+        $bytes = hex2bin($hex);
+
+        if (strlen($bytes) < 4) return false;
+
+        $payload  = substr($bytes, 0, -4);
+        $checksum = substr($bytes, -4);
+        $hash     = hash('sha256', hash('sha256', $payload, true), true);
+
+        return substr($hash, 0, 4) === $checksum;
     }
 }

@@ -1,4 +1,3 @@
-
 # KeyWizard 🔑
 
 > Crea una bóveda Bitcoin multifirma en menos de 10 minutos. Sin tecnicismos, sin exchanges, sin intermediarios.
@@ -9,9 +8,9 @@ Proyecto desarrollado para el **Hackathon h2 · selfcustody-ui-challenge**
 
 ## ¿Qué es KeyWizard?
 
-KeyWizard es una interfaz web que guía a usuarios no técnicos en la creación de una política de custodia Bitcoin multifirma. El usuario responde preguntas simples y KeyWizard genera automáticamente un **output descriptor** compatible con Sparrow Wallet y Liana.
+KeyWizard es una interfaz web que guía a usuarios no técnicos en la creación de una política de custodia Bitcoin multifirma. El usuario responde preguntas simples y KeyWizard genera automáticamente un **output descriptor BIP380** compatible con Sparrow Wallet y Liana.
 
-El problema que resuelve: configurar multisig en Sparrow requiere conocimientos técnicos previos. KeyWizard elimina esa barrera con un wizard guiado, un consultor IA y educación integrada.
+El problema que resuelve: configurar multisig, timelocks y Taproot en Sparrow requiere conocimientos técnicos profundos. KeyWizard elimina esa barrera con un wizard guiado, un consultor IA y educación integrada en cada paso.
 
 ---
 
@@ -25,35 +24,94 @@ Flujo completo:
 1. Visita la página principal
 2. Haz click en **Crear mi bóveda** o **Consultor IA**
 3. Sigue los 4 pasos del wizard
-4. Obtén tu descriptor listo para importar en Sparrow
+4. Obtén tu descriptor listo para importar en Sparrow o Liana
+
+---
+
+## Entregables cubiertos
+
+### Mínimo viable ✅
+- **Multisig N-of-M** — wizard guiado para cualquier configuración M ≥ 2
+- **Timelocks** — relativo `older()` para herencia y absoluto `after()` para ahorro bloqueado
+- **Importar xpubs** — manual o desde archivo JSON, con fingerprint y derivation path opcionales
+- **Descriptor BIP380 válido** — con o sin fingerprint, validado antes de mostrar
+- **Direcciones de recibo** — direcciones de ejemplo derivadas del descriptor en la pantalla de resultado
+
+### Bonus ✅
+- **Simulador** — escenarios específicos por tipo de bóveda (multisig, herencia, ahorro, taproot)
+- **Taproot** — soporte completo `tr()`, `multi_a()` y Taproot con timelock
 
 ---
 
 ## Características
 
 ### Wizard de 4 pasos
-- **Paso 1** — Selección de caso de uso (personal, familiar, negocio, ahorro, herencia)
-- **Paso 2** — Configuración visual de firmas con preview en tiempo real y visualizador de llaves
-- **Paso 3** — Ingreso de xpubs con validación en tiempo real, guía por dispositivo (Ledger, Trezor, Coldcard) y validación de duplicados
-- **Paso 4** — Simulador de escenarios: qué pasa si pierdes 1, 2 o N llaves
+- **Paso 1** — 7 casos de uso: personal, familiar, negocio, ahorro, herencia (timelock relativo), ahorro bloqueado (timelock absoluto), Taproot
+- **Paso 2** — Configuración visual de firmas con preview en tiempo real y visualizador de llaves animado
+- **Paso 3** — Ingreso de xpubs con validación en tiempo real, detección de duplicados, guía por dispositivo (Ledger, Trezor, Coldcard), importación desde archivo JSON, fingerprint y derivation path
+- **Paso 4** — Simulador de escenarios específico por tipo de bóveda
+
+### Tipos de descriptor generados
+
+```bash
+# Custodia simple
+wpkh(xpub.../0/*)
+
+# Multisig M-of-N
+wsh(multi(2,xpub1.../0/*,xpub2.../0/*,xpub3.../0/*))
+
+# BIP380 completo con fingerprint y derivation path
+wsh(multi(2,[a1b2c3d4/48'/0'/0'/2']xpub1.../0/*,[e5f6a7b8/48'/0'/0'/2']xpub2.../0/*))
+
+# Timelock relativo — herencia (~1 año)
+wsh(andor(pk(xpub_owner.../0/*),older(52560),pk(xpub_heir.../0/*)))
+
+# Timelock absoluto — ahorro bloqueado
+wsh(andor(pk(xpub_owner.../0/*),after(850000),pk(xpub_heir.../0/*)))
+
+# Taproot simple
+tr(xpub.../0/*)
+
+# Taproot multisig
+tr(xpub_internal.../0/*,multi_a(2,xpub1.../0/*,xpub2.../0/*))
+```
 
 ### Consultor IA
-- Chat conversacional que hace preguntas simples en español
-- Detecta necesidades del usuario y recomienda una configuración multisig
-- Inyecta la configuración directamente en el wizard — el usuario solo necesita agregar sus xpubs
+- Chat conversacional en español sin tecnicismos
+- Hace máximo 5 preguntas para entender las necesidades del usuario
+- Recomienda la configuración ideal con justificación
+- Siempre menciona el flujo de recovery
+- Nunca pide seed phrases ni claves privadas
+- Inyecta la configuración directamente en el wizard
 - Powered by Groq (LLaMA 3.3 70B)
 
-### Resultado
-- Descriptor generado en formato estándar (`wpkh` o `wsh(multi(...))`)
-- Score de seguridad con 4 checks explicados
-- Código QR del descriptor descargable
-- Instrucciones paso a paso para importar en Sparrow
-- Sección "¿Y ahora qué?" con los siguientes pasos
+### Pantalla de resultado
+- Descriptor generado completo y copiable
+- Código QR descargable
+- Score de seguridad animado con 4 checks
+- Card de recovery — qué guardar para no perder acceso
+- Instrucciones para importar en Sparrow
+- Sección "¿Y ahora qué?" con pasos siguientes
+- Explicación del timelock para herencia y ahorro bloqueado
+- Explicación de Taproot cuando aplica
 
 ### Herramientas adicionales
-- **Validador de descriptores** — analiza cualquier descriptor externo, valida su estructura y calcula su score de seguridad
-- **Glosario interactivo** — 12 términos en flashcards con animación 3D flip, filtros por categoría y mini chat IA que explica cada término en profundidad
-- **Onboarding** — 3 slides educativos para usuarios que nunca han oído hablar de autocustodia
+- **Validador de descriptores** — analiza `wpkh`, `wsh(multi)`, `andor()`, `tr()`, calcula score de seguridad
+- **Glosario interactivo** — 19 términos en flashcards con animación 3D, filtros por categoría y mini chat IA por término
+- **Onboarding** — 3 slides educativos para usuarios nuevos en autocustodia
+
+---
+
+## Anti-patrones evitados
+
+| Anti-patrón | Cómo lo evitamos |
+|---|---|
+| Pedir seed phrase | Nunca se solicita en ninguna vista ni en la IA |
+| Custodiar claves privadas | Solo sesión PHP, sin base de datos |
+| Descriptors sin validación | `selfValidate()` antes de guardar en sesión |
+| UI oculta información crítica | Descriptor y xpubs siempre visibles y copiables |
+| Olvidar flujo de recovery | Card de recovery obligatoria en el resultado |
+| Timelocks hardcodeados | `savings_lock` permite bloque configurable por el usuario |
 
 ---
 
@@ -63,11 +121,15 @@ Flujo completo:
 |---|---|---|
 | Para usuarios no técnicos | ✗ Curva alta | ✓ Diseñado para eso |
 | Guía paso a paso | ✗ Documentación externa | ✓ Wizard integrado |
-| Consultor IA | ✗ | ✓ |
-| Simulador de escenarios | ✗ | ✓ |
-| Glosario en español | ✗ | ✓ |
-| QR del descriptor | ✗ | ✓ |
-| Validador externo | ✗ | ✓ |
+| Consultor IA | ✗ | ✓ Recomienda config ideal |
+| Timelocks (herencia) | ✗ Solo Liana, complejo | ✓ Guiado y simple |
+| Timelocks (ahorro bloqueado) | ✗ | ✓ Bloque configurable |
+| Taproot + Miniscript | ✗ Manual y técnico | ✓ Un click |
+| Simulador de escenarios | ✗ | ✓ ¿Qué pasa si pierdo una llave? |
+| Glosario en español | ✗ | ✓ Con IA explicando términos |
+| Validador de descriptores | ✗ | ✓ Analiza cualquier descriptor |
+| Flujo de recovery | ✗ El usuario lo descubre solo | ✓ Integrado en el resultado |
+| Genera el descriptor | ✓ | ✓ |
 | Compatible con Sparrow / Liana | ✓ | ✓ Exporta directo |
 
 ---
@@ -94,8 +156,8 @@ Flujo completo:
 
 ```bash
 # 1. Clonar el repositorio
-git clone https://github.com/tu-usuario/keywizard.git
-cd keywizard
+git clone https://github.com/Knightordev/KeyWizard.git
+cd KeyWizard
 
 # 2. Instalar dependencias PHP
 composer install
@@ -117,7 +179,7 @@ npm run dev
 
 Visita `http://127.0.0.1:8000`
 
-### Obtener API key de Groq
+### Obtener API key de Groq (gratis)
 1. Regístrate en [console.groq.com](https://console.groq.com)
 2. Ve a API Keys → Create API Key
 3. Copia la key y pégala en `.env`
@@ -129,25 +191,26 @@ Visita `http://127.0.0.1:8000`
 ```
 app/
 ├── Http/Controllers/
-│   ├── CustodyController.php     — Wizard y resultado
-│   └── AiConsultorController.php — Consultor IA
+│   ├── CustodyController.php     — Wizard, resultado y validador
+│   └── AiConsultorController.php — Consultor IA y bridge
 └── Services/
-    ├── DescriptorBuilder.php     — Generación y análisis de descriptores
-    └── AiConsultorService.php    — Integración con Groq
+    ├── DescriptorBuilder.php     — Generación, validación y análisis de descriptores
+    └── AiConsultorService.php    — Integración con Groq + prompt engineering
 
 resources/views/
 ├── layouts/
-│   └── app.blade.php             — Layout base
-├── welcome.blade.php             — Página principal
+│   └── app.blade.php             — Layout base con navbar responsive
+├── welcome.blade.php             — Página principal con onboarding
 └── custody/
-    ├── step1.blade.php           — Caso de uso
+    ├── step1.blade.php           — Caso de uso (7 opciones)
     ├── step2.blade.php           — Configuración de firmas
-    ├── step3.blade.php           — Ingreso de xpubs
-    ├── step4.blade.php           — Revisión y simulador
-    ├── result.blade.php          — Descriptor final
+    ├── step3.blade.php           — Ingreso de xpubs + importar JSON
+    ├── step4.blade.php           — Revisión y simulador de escenarios
+    ├── result.blade.php          — Descriptor final + recovery + QR
     ├── ai.blade.php              — Consultor IA
+    ├── ai_bridge.blade.php       — Transición IA → wizard
     ├── validate.blade.php        — Validador de descriptores
-    └── glossary.blade.php        — Glosario interactivo
+    └── glossary.blade.php        — Glosario interactivo con flashcards
 
 routes/
 └── web.php                       — Todas las rutas
@@ -155,24 +218,9 @@ routes/
 
 ---
 
-## Descriptores generados
-
-KeyWizard genera descriptores en formato estándar SegWit:
-
-```
-# 1 llave (custodia simple)
-wpkh(xpub.../0/*)
-
-# M de N llaves (multifirma)
-wsh(multi(2,xpub1.../0/*,xpub2.../0/*,xpub3.../0/*))
-```
-
-Compatibles con Sparrow Wallet, Liana y cualquier wallet que soporte BIP380.
-
----
-
 ## Equipo
 
+**The Code Knights**
 Desarrollado para el **Hackathon h2 · selfcustody-ui-challenge**
 Fecha de entrega: 8 de junio de 2026
 
@@ -180,6 +228,7 @@ Fecha de entrega: 8 de junio de 2026
 - Sofia Jimena Mezeta Castillo
 - Héctor Iván Chumba Poot
 - Yael Israel Pérez Espadas
+
 ---
 
 ## Licencia

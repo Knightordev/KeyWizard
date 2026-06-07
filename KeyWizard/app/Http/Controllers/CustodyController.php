@@ -91,7 +91,8 @@ class CustodyController extends Controller
             'xpubs.*.regex' => 'Una o más claves no tienen formato correcto (debe empezar con xpub, ypub o zpub).',
         ]);
 
-        $xpubs = array_map('trim', $request->xpubs);
+        $xpubs   = array_map('trim', $request->xpubs);
+        $builder = new DescriptorBuilder();
 
         if (count($xpubs) !== count(array_unique($xpubs))) {
             return back()->withErrors([
@@ -99,9 +100,14 @@ class CustodyController extends Controller
             ])->withInput();
         }
 
-        if (session('custody.purpose') === 'savings_lock' && $request->filled('lock_block')) {
-            session(['custody.lock_block' => (int) $request->lock_block]);
+        foreach ($xpubs as $i => $xpub) {
+            if (!$builder->validateXpubChecksum($xpub)) {
+                return back()->withErrors([
+                    'xpubs' => 'La clave ' . ($i + 1) . ' tiene un checksum inválido. Verifica que la copiaste completa y sin errores.',
+                ])->withInput();
+            }
         }
+
         if (session('custody.purpose') === 'savings_lock' && $request->filled('lock_block')) {
             session(['custody.lock_block' => (int) $request->lock_block]);
         }
@@ -109,13 +115,12 @@ class CustodyController extends Controller
         if (session('custody.purpose') === 'taproot' && $request->filled('taproot_internal')) {
             session(['custody.taproot_internal' => trim($request->taproot_internal)]);
         }
+
         session([
             'custody.xpubs'        => $xpubs,
             'custody.fingerprints' => $request->input('fingerprints', []),
             'custody.derivations'  => $request->input('derivations', []),
         ]);
-
-        session(['custody.xpubs' => $xpubs]);
 
         return redirect()->route('wizard.step4');
     }
@@ -150,45 +155,54 @@ class CustodyController extends Controller
             return redirect()->route('wizard.step1');
         }
 
-        $builder   = new DescriptorBuilder();
-        $threshold = session('custody.threshold');
-        $totalKeys = session('custody.total_keys');
-        $xpubs     = session('custody.xpubs');
-        $purpose   = session('custody.purpose');
+        $builder      = new DescriptorBuilder();
+        $threshold    = session('custody.threshold');
+        $totalKeys    = session('custody.total_keys');
+        $xpubs        = session('custody.xpubs');
+        $purpose      = session('custody.purpose');
+        $fingerprints = session('custody.fingerprints', []);
+        $derivations  = session('custody.derivations', []);
 
         if ($purpose === 'inheritance') {
             $blocks      = 52560;
-            $descriptor  = $builder->buildTimelockRelative($xpubs[0], $xpubs[1], $blocks);
+            $descriptor  = $builder->buildTimelockRelative(
+                $xpubs[0], $xpubs[1], $blocks,
+                $fingerprints[0] ?? '', $derivations[0] ?? '',
+                $fingerprints[1] ?? '', $derivations[1] ?? ''
+            );
             $descripcion = $builder->describeTimelockRelative($blocks);
-        } elseif ($purpose === 'savings_lock') {
-            $block       = session('custody.lock_block', 850000);
-            $descriptor  = $builder->buildTimelockAbsolute($xpubs[0], $xpubs[1], $block);
-            $descripcion = $builder->describeTimelockAbsolute($block);
-        } else {
-            $descriptor  = $builder->build($threshold, $xpubs);
-            $descripcion = $builder->describe($threshold, $totalKeys);
-        }
 
-        if ($purpose === 'inheritance') {
-            $blocks      = 52560;
-            $descriptor  = $builder->buildTimelockRelative($xpubs[0], $xpubs[1], $blocks);
-            $descripcion = $builder->describeTimelockRelative($blocks);
         } elseif ($purpose === 'savings_lock') {
             $block       = session('custody.lock_block', 850000);
-            $descriptor  = $builder->buildTimelockAbsolute($xpubs[0], $xpubs[1], $block);
+            $descriptor  = $builder->buildTimelockAbsolute(
+                $xpubs[0], $xpubs[1], $block,
+                $fingerprints[0] ?? '', $derivations[0] ?? '',
+                $fingerprints[1] ?? '', $derivations[1] ?? ''
+            );
             $descripcion = $builder->describeTimelockAbsolute($block);
+
         } elseif ($purpose === 'taproot') {
             $internal = session('custody.taproot_internal', $xpubs[0]);
             if (count($xpubs) === 1) {
                 $descriptor  = $builder->buildTaprootSingle($xpubs[0]);
                 $descripcion = $builder->describeTaproot('single');
             } else {
-                $descriptor  = $builder->buildTaprootMulti($internal, $xpubs, $threshold);
+                $descriptor  = $builder->buildTaprootMulti(
+                    $internal, $xpubs, $threshold,
+                    $fingerprints, $derivations
+                );
                 $descripcion = $builder->describeTaproot('multi');
             }
+
         } else {
-            $descriptor  = $builder->build($threshold, $xpubs);
+            $descriptor  = $builder->build($threshold, $xpubs, $fingerprints, $derivations);
             $descripcion = $builder->describe($threshold, $totalKeys);
+        }
+
+        if (!$builder->selfValidate($descriptor)) {
+            return back()->withErrors([
+                'descriptor' => 'Error interno al generar el descriptor. Verifica tus claves e intenta de nuevo.'
+            ]);
         }
 
         $score = $builder->securityScore($threshold, $totalKeys, $purpose);
@@ -233,14 +247,81 @@ class CustodyController extends Controller
 
     private function buildScenarios(int $threshold, int $total): array
     {
+        $purpose   = session('custody.purpose');
         $scenarios = [];
+
+        if ($purpose === 'inheritance') {
+            return [
+                [
+                    'label'   => 'Tú pierdes tu llave',
+                    'can'     => false,
+                    'message' => 'No podrás mover fondos inmediatamente. Tu heredero podrá acceder después de 1 año sin actividad.',
+                ],
+                [
+                    'label'   => 'Tu heredero pierde su llave',
+                    'can'     => true,
+                    'message' => 'Tú sigues teniendo acceso total en cualquier momento. El timelock no te afecta.',
+                ],
+                [
+                    'label'   => 'Ambos pierden sus llaves',
+                    'can'     => false,
+                    'message' => 'Pérdida total de acceso. Guarda ambas seed phrases en lugares seguros y separados.',
+                ],
+                [
+                    'label'   => 'Han pasado más de 1 año sin actividad',
+                    'can'     => true,
+                    'message' => 'Tu heredero puede mover los fondos con su llave. Para evitarlo, mueve una pequeña cantidad antes de que expire el año.',
+                ],
+            ];
+        }
+
+        if ($purpose === 'savings_lock') {
+            $block = session('custody.lock_block', 850000);
+            return [
+                [
+                    'label'   => 'Antes del bloque ' . number_format($block),
+                    'can'     => false,
+                    'message' => 'Nadie puede mover los fondos — ni tú. El timelock absoluto es irreversible hasta ese bloque.',
+                ],
+                [
+                    'label'   => 'Después del bloque ' . number_format($block),
+                    'can'     => true,
+                    'message' => 'Puedes mover los fondos normalmente con tu llave. El bloqueo se levanta automáticamente.',
+                ],
+                [
+                    'label'   => 'Pierdes tu llave',
+                    'can'     => false,
+                    'message' => 'Sin tu llave no puedes acceder incluso después del bloque objetivo. Guarda tu seed phrase en un lugar seguro.',
+                ],
+            ];
+        }
+
+        if ($purpose === 'taproot') {
+            return [
+                [
+                    'label'   => 'Pierdes 1 llave',
+                    'can'     => $threshold === 1,
+                    'message' => $threshold === 1
+                        ? 'Puedes seguir operando con la llave restante.'
+                        : 'No puedes firmar — necesitas todas las llaves configuradas.',
+                ],
+                [
+                    'label'   => 'Alguien analiza la blockchain',
+                    'can'     => true,
+                    'message' => 'Con Taproot las condiciones de gasto son invisibles on-chain. Nadie puede ver cuántas llaves tienes ni las reglas de tu bóveda.',
+                ],
+                [
+                    'label'   => 'Pierdes todas las llaves',
+                    'can'     => false,
+                    'message' => 'Pérdida total. Guarda el descriptor y las seed phrases de todos los dispositivos por separado.',
+                ],
+            ];
+        }
 
         for ($lost = 1; $lost <= $total; $lost++) {
             $remaining = $total - $lost;
             $canSign   = $remaining >= $threshold;
-            $label     = $lost === 1
-                ? "Pierdes 1 llave"
-                : "Pierdes {$lost} llaves";
+            $label     = $lost === 1 ? 'Pierdes 1 llave' : "Pierdes {$lost} llaves";
 
             $scenarios[] = [
                 'label'   => $label,

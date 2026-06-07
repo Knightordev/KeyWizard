@@ -403,9 +403,44 @@
                 <td class="check">✓ Wizard integrado</td>
             </tr>
             <tr>
+                <td>Consultor IA</td>
+                <td class="cross">✗</td>
+                <td class="check">✓ Recomienda config ideal</td>
+            </tr>
+            <tr>
+                <td>Timelocks (herencia)</td>
+                <td class="cross">✗ Solo Liana, complejo</td>
+                <td class="check">✓ Guiado y simple</td>
+            </tr>
+            <tr>
+                <td>Timelocks (ahorro bloqueado)</td>
+                <td class="cross">✗</td>
+                <td class="check">✓ Bloque configurable</td>
+            </tr>
+            <tr>
+                <td>Taproot + Miniscript</td>
+                <td class="cross">✗ Manual y técnico</td>
+                <td class="check">✓ Un click</td>
+            </tr>
+            <tr>
+                <td>Simulador de escenarios</td>
+                <td class="cross">✗</td>
+                <td class="check">✓ ¿Qué pasa si pierdo una llave?</td>
+            </tr>
+            <tr>
                 <td>Glosario en español</td>
                 <td class="cross">✗</td>
-                <td class="check">✓</td>
+                <td class="check">✓ Con IA explicando términos</td>
+            </tr>
+            <tr>
+                <td>Validador de descriptores</td>
+                <td class="cross">✗</td>
+                <td class="check">✓ Analiza cualquier descriptor</td>
+            </tr>
+            <tr>
+                <td>Flujo de recovery</td>
+                <td class="cross">✗ El usuario lo descubre solo</td>
+                <td class="check">✓ Integrado en el resultado</td>
             </tr>
             <tr>
                 <td>Genera el descriptor</td>

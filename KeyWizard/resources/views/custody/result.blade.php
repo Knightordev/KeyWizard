@@ -528,6 +528,56 @@
     color: var(--text-muted);
     line-height: 1.6;
 }
+.recovery-card {
+    background: rgba(248,113,113,0.05);
+    border: 1px solid rgba(248,113,113,0.15);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.recovery-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: #fca5a5;
+    margin-bottom: 1.25rem;
+}
+
+.recovery-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.recovery-item {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 10px 12px;
+    border-radius: var(--radius-sm);
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+}
+
+.recovery-item.critical {
+    border-color: rgba(248,113,113,0.2);
+}
+
+.recovery-item-icon { font-size: 18px; flex-shrink: 0; }
+
+.recovery-item-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 3px;
+}
+
+.recovery-item-desc {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.5;
+}
 </style>
 @endpush
 
@@ -758,7 +808,32 @@
             </button>
         </div>
     </div>
-
+    <div class="recovery-card">
+        <div class="recovery-title">🔄 Guarda esto para poder recuperar tu bóveda</div>
+        <div class="recovery-grid">
+            <div class="recovery-item critical">
+                <div class="recovery-item-icon">📄</div>
+                <div>
+                    <div class="recovery-item-label">El descriptor</div>
+                    <div class="recovery-item-desc">Sin el descriptor no puedes reconstruir tu bóveda en ningún otro dispositivo. Guárdalo en al menos 2 lugares.</div>
+                </div>
+            </div>
+            <div class="recovery-item critical">
+                <div class="recovery-item-icon">🔑</div>
+                <div>
+                    <div class="recovery-item-label">Todas las xpubs</div>
+                    <div class="recovery-item-desc">Necesitas todas las claves públicas para reconstruir el descriptor si lo pierdes.</div>
+                </div>
+            </div>
+            <div class="recovery-item">
+                <div class="recovery-item-icon">📝</div>
+                <div>
+                    <div class="recovery-item-label">Las seed phrases de cada dispositivo</div>
+                    <div class="recovery-item-desc">Guárdalas por separado en papel. Con la seed puedes regenerar el xpub en cualquier hardware wallet compatible.</div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="next-steps-card">
         <div class="next-steps-title">🗺️ ¿Y ahora qué?</div>
         <div class="next-steps-grid">

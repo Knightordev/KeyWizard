@@ -687,7 +687,145 @@
                 </div>
             </div>
         </div>
+        <div class="flashcard" data-tag="técnico" data-term="Taproot" data-def="El formato más moderno de Bitcoin (activado en 2021). Usa tr() en el descriptor. Las condiciones de gasto son invisibles on-chain hasta que se gastan — máxima privacidad. También reduce el tamaño de las transacciones y sus comisiones. Compatible con Sparrow 1.8+.">
+            <div class="flashcard-inner">
+                <div class="flashcard-front">
+                    <span class="card-tag">técnico</span>
+                    <div class="card-front-content">
+                        <div class="card-emoji">⚡</div>
+                        <div class="card-term">Taproot</div>
+                        <div class="card-hint">click para voltear</div>
+                    </div>
+                </div>
+                <div class="flashcard-back">
+                    <div class="card-back-def">El formato más moderno de Bitcoin. Las condiciones de gasto son invisibles on-chain — máxima privacidad y comisiones menores. Compatible con Sparrow 1.8+.</div>
+                    <div class="card-back-actions">
+                        <button class="card-ask-btn">🤖 Explícame más</button>
+                        <button class="card-flip-back">↩ Voltear</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
+        <div class="flashcard" data-tag="técnico" data-term="Timelock relativo (older)" data-def="Condición que bloquea fondos por un número de bloques desde la última actividad. older(52560) significa que el gasto alternativo solo es válido después de ~1 año sin mover los fondos. Usado en herencia: el heredero accede solo si tú no has movido tus fondos en 1 año.">
+            <div class="flashcard-inner">
+                <div class="flashcard-front">
+                    <span class="card-tag">técnico</span>
+                    <div class="card-front-content">
+                        <div class="card-emoji">⏳</div>
+                        <div class="card-term">Timelock relativo</div>
+                        <div class="card-hint">click para voltear</div>
+                    </div>
+                </div>
+                <div class="flashcard-back">
+                    <div class="card-back-def">Bloquea fondos por N bloques desde la última actividad. older(52560) ≈ 1 año. Si no mueves tus fondos en ese tiempo, tu heredero puede acceder.</div>
+                    <div class="card-back-actions">
+                        <button class="card-ask-btn">🤖 Explícame más</button>
+                        <button class="card-flip-back">↩ Voltear</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flashcard" data-tag="técnico" data-term="Timelock absoluto (after)" data-def="Condición que bloquea fondos hasta que la red Bitcoin alcance un bloque específico. after(850000) significa que nadie puede mover los fondos hasta ese bloque. Irreversible — úsalo con cautela. Ideal para ahorro a largo plazo con fecha objetivo.">
+            <div class="flashcard-inner">
+                <div class="flashcard-front">
+                    <span class="card-tag">técnico</span>
+                    <div class="card-front-content">
+                        <div class="card-emoji">📅</div>
+                        <div class="card-term">Timelock absoluto</div>
+                        <div class="card-hint">click para voltear</div>
+                    </div>
+                </div>
+                <div class="flashcard-back">
+                    <div class="card-back-def">Bloquea fondos hasta un bloque específico de Bitcoin. Nadie puede moverlos antes — ni tú. Ideal para ahorro con fecha objetivo. Es irreversible.</div>
+                    <div class="card-back-actions">
+                        <button class="card-ask-btn">🤖 Explícame más</button>
+                        <button class="card-flip-back">↩ Voltear</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flashcard" data-tag="técnico" data-term="Miniscript" data-def="Lenguaje estructurado para escribir políticas de gasto complejas en Bitcoin. Permite combinar multisig con timelocks: firma A o (firma B después de 1 año). KeyWizard usa Miniscript para generar los descriptores de herencia y ahorro bloqueado mediante andor().">
+            <div class="flashcard-inner">
+                <div class="flashcard-front">
+                    <span class="card-tag">técnico</span>
+                    <div class="card-front-content">
+                        <div class="card-emoji">📜</div>
+                        <div class="card-term">Miniscript</div>
+                        <div class="card-hint">click para voltear</div>
+                    </div>
+                </div>
+                <div class="flashcard-back">
+                    <div class="card-back-def">Lenguaje para políticas de gasto complejas. Combina multisig con timelocks. KeyWizard lo usa en herencia y ahorro bloqueado con andor().</div>
+                    <div class="card-back-actions">
+                        <button class="card-ask-btn">🤖 Explícame más</button>
+                        <button class="card-flip-back">↩ Voltear</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flashcard" data-tag="concepto" data-term="Recovery (Recuperación)" data-def="El proceso de recuperar acceso a tu bóveda si pierdes un dispositivo. En multisig 2 de 3 puedes recuperar con las 2 llaves restantes. En herencia tu heredero accede después de 1 año. Siempre guarda el descriptor y todas las xpubs — sin ellos no puedes recuperar.">
+            <div class="flashcard-inner">
+                <div class="flashcard-front">
+                    <span class="card-tag">concepto</span>
+                    <div class="card-front-content">
+                        <div class="card-emoji">🔄</div>
+                        <div class="card-term">Recovery</div>
+                        <div class="card-hint">click para voltear</div>
+                    </div>
+                </div>
+                <div class="flashcard-back">
+                    <div class="card-back-def">Recuperar acceso a tu bóveda si pierdes un dispositivo. En multisig puedes usar las llaves restantes. Guarda siempre el descriptor y las xpubs.</div>
+                    <div class="card-back-actions">
+                        <button class="card-ask-btn">🤖 Explícame más</button>
+                        <button class="card-flip-back">↩ Voltear</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flashcard" data-tag="técnico" data-term="PSBT (Partially Signed Bitcoin Transaction)" data-def="Formato estándar para transacciones Bitcoin parcialmente firmadas. En multisig, cada firmante agrega su firma al PSBT sin necesidad de estar conectados al mismo tiempo. Sparrow y los hardware wallets lo usan para coordinar las firmas de forma segura y offline.">
+            <div class="flashcard-inner">
+                <div class="flashcard-front">
+                    <span class="card-tag">técnico</span>
+                    <div class="card-front-content">
+                        <div class="card-emoji">✍️</div>
+                        <div class="card-term">PSBT</div>
+                        <div class="card-hint">click para voltear</div>
+                    </div>
+                </div>
+                <div class="flashcard-back">
+                    <div class="card-back-def">Transacción parcialmente firmada. En multisig cada firmante agrega su firma sin estar conectados simultáneamente. Sparrow y los hardware wallets lo usan para firmar de forma segura.</div>
+                    <div class="card-back-actions">
+                        <button class="card-ask-btn">🤖 Explícame más</button>
+                        <button class="card-flip-back">↩ Voltear</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flashcard" data-tag="software" data-term="Liana Wallet" data-def="Wallet de escritorio especializada en timelocks y recuperación de fondos. Perfecta para los descriptores de herencia que genera KeyWizard. Automatiza el proceso de renovar el timelock cada año para mantener activa la bóveda. Compatible con descriptores andor() y Miniscript.">
+            <div class="flashcard-inner">
+                <div class="flashcard-front">
+                    <span class="card-tag">software</span>
+                    <div class="card-front-content">
+                        <div class="card-emoji">🌿</div>
+                        <div class="card-term">Liana Wallet</div>
+                        <div class="card-hint">click para voltear</div>
+                    </div>
+                </div>
+                <div class="flashcard-back">
+                    <div class="card-back-def">Wallet especializada en timelocks y recuperación. Compatible con los descriptores de herencia de KeyWizard. Automatiza la renovación del timelock anual.</div>
+                    <div class="card-back-actions">
+                        <button class="card-ask-btn">🤖 Explícame más</button>
+                        <button class="card-flip-back">↩ Voltear</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="no-cards" id="no-cards" style="display:none;">
             No hay términos en esta categoría.
         </div>
