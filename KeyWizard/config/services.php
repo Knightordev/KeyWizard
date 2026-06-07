@@ -41,4 +41,12 @@ return [
     'anthropic' => [
         'key' => env('ANTHROPIC_API_KEY'),
     ],
+
+    'bitcoin_core' => [
+        'enabled' => env('BITCOIN_CORE_ENABLED', false),
+        'required' => env('BITCOIN_CORE_REQUIRED', false),
+        'cli_path' => env('BITCOIN_CLI_PATH', 'bitcoin-cli'),
+        'network' => env('BITCOIN_CORE_NETWORK', 'mainnet'),
+        'timeout' => env('BITCOIN_CORE_TIMEOUT', 8),
+    ],
 ];

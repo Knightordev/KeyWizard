@@ -407,6 +407,11 @@
         const infoGrid = document.getElementById('info-grid');
         infoGrid.innerHTML = '';
         if (data.info && Object.keys(data.info).length > 0) {
+            const validation = data.descriptor_validation || {};
+            const validationLabel = validation.source === 'bitcoin_core'
+                ? 'Bitcoin Core'
+                : 'Local KeyWizard';
+            const checksum = validation.checksum || 'No disponible';
             const items = [
                 { label: 'Tipo',              value: data.info.type_label ?? '—' },
                 { label: 'Política',          value: data.info.timelock_label
@@ -414,6 +419,8 @@
                     : `<span>${data.info.threshold ?? '—'}</span> de ${data.info.total_keys ?? '—'} llaves` },
                 { label: 'Total de llaves',   value: data.info.total_keys ?? '—' },
                 { label: 'Firmas requeridas', value: `<span>${data.info.threshold ?? '—'}</span>` },
+                { label: 'Validacion',        value: validationLabel },
+                { label: 'Checksum Core',     value: checksum },
             ];
             infoGrid.innerHTML = items.map(i => `
                 <div class="info-item">
