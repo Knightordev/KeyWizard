@@ -323,6 +323,22 @@
     }
     @media (max-width: 768px) {
         .wizard-sidebar { display: none; }
+        .ai-wrap {
+            padding: 2rem 1.25rem 4rem;
+        }
+        .ai-header h1 {
+            font-size: 1.6rem;
+        }
+        .rec-grid {
+            grid-template-columns: 1fr;
+        }
+        .rec-actions {
+            flex-direction: column;
+        }
+        .rec-actions .btn {
+            width: 100%;
+            justify-content: center;
+        }
     }
 </style>
 @endpush

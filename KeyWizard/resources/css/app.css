@@ -421,16 +421,26 @@ html, body {
         padding: 11px;
         border-radius: var(--radius-sm);
     }
-       
-    .navbar {
-        margin-bottom: 0;
+    .footer {
+        flex-direction: column;
+        gap: 4px;
+        text-align: center;
+        padding: 1rem;
     }
-    body {
-        background: #ffffff;
-        }
 
-    .xpub-input::placeholder {
-    color: var(--text-dim);
-    opacity: 0.45;
- }
+    .card {
+        padding: 1.25rem;
+    }
+
+    .btn-lg {
+        padding: 11px 20px;
+        font-size: 15px;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .wizard-progress {
+        padding: 1.5rem 1rem 0;
+        overflow-x: auto;
+    }
 }

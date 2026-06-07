@@ -312,6 +312,57 @@
         display: flex;
         gap: 8px;
     }
+    @media (max-width: 640px) {
+    .hero {
+        padding: 4rem 1.25rem 3rem;
+    }
+
+    .hero h1 {
+        font-size: 2.4rem;
+        letter-spacing: -1px;
+    }
+
+    .hero-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .steps-section {
+        padding: 3rem 1.25rem;
+    }
+
+    .steps-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .compare-section {
+        padding: 0 1.25rem 3rem;
+        overflow-x: auto;
+    }
+
+    .compare-table {
+        min-width: 480px;
+    }
+
+    .cta-section {
+        padding: 0 1.25rem 4rem;
+    }
+
+    .onboarding-slides {
+        padding: 1.75rem 1.25rem 1rem;
+    }
+
+    .onboarding-footer {
+        padding: 1rem 1.25rem;
+        flex-direction: column;
+        gap: 12px;
+        align-items: stretch;
+    }
+
+    .onboarding-actions {
+        justify-content: flex-end;
+    }
+}
 </style>
 @endpush
 

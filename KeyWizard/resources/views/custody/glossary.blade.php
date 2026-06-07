@@ -448,6 +448,32 @@
         color: var(--purple);
         margin-bottom: 6px;
     }
+    @media (max-width: 640px) {
+    .glossary-wrap {
+        padding: 1.5rem 1.25rem 3rem;
+    }
+    .cards-grid {
+        grid-template-columns: 1fr;
+    }
+    .filters {
+        gap: 6px;
+        justify-content: flex-start;
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        padding-bottom: 4px;
+    }
+    .filter-btn {
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+    .ai-drawer {
+        max-height: 75vh;
+    }
+    .drawer-wizard canvas {
+        width: 70px;
+        height: auto;
+    }
+}
 </style>
 @endpush
 
