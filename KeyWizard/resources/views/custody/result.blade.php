@@ -726,23 +726,44 @@
     <div class="addresses-card">
         <div class="addresses-header">
             <div class="addresses-title">📬 Direcciones de recibo</div>
-            <div class="addresses-subtitle">Ejemplo de direcciones derivadas de tu descriptor</div>
+            <div class="addresses-subtitle">
+                @if(!empty($data['addresses']))
+                    Derivadas de tu descriptor · cadena externa (m/0/*)
+                @else
+                    Ejemplo de direcciones derivadas de tu descriptor
+                @endif
+            </div>
         </div>
         <div class="addresses-list">
-            <div class="address-row">
-                <span class="address-index">#0</span>
-                <span class="address-value">bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq</span>
-            </div>
-            <div class="address-row">
-                <span class="address-index">#1</span>
-                <span class="address-value">bc1qc7slrfxkknqcq2jevvvkdgvrt8080852dfjewde</span>
-            </div>
-            <div class="address-row">
-                <span class="address-index">#2</span>
-                <span class="address-value">bc1q34aq5gqfszfp3k5p5rj43tdvgvnm2kkst2uqxz</span>
-            </div>
+            @if(!empty($data['addresses']))
+                @foreach($data['addresses'] as $i => $address)
+                <div class="address-row">
+                    <span class="address-index">#{{ $i }}</span>
+                    <span class="address-value">{{ $address }}</span>
+                </div>
+                @endforeach
+            @else
+                <div class="address-row">
+                    <span class="address-index">#0</span>
+                    <span class="address-value">bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq</span>
+                </div>
+                <div class="address-row">
+                    <span class="address-index">#1</span>
+                    <span class="address-value">bc1qc7slrfxkknqcq2jevvvkdgvrt8080852dfjewde</span>
+                </div>
+                <div class="address-row">
+                    <span class="address-index">#2</span>
+                    <span class="address-value">bc1q34aq5gqfszfp3k5p5rj43tdvgvnm2kkst2uqxz</span>
+                </div>
+            @endif
         </div>
-        <p class="addresses-note">⚠️ Estas son direcciones de ejemplo. Importa tu descriptor en Sparrow Wallet para obtener tus direcciones reales.</p>
+        <p class="addresses-note">
+            @if(!empty($data['addresses']))
+                ✅ Estas direcciones son reales derivadas de tus xpubs. Puedes usarlas para recibir Bitcoin.
+            @else
+                ⚠️ No se pudieron derivar direcciones. Importa tu descriptor en Sparrow Wallet para obtenerlas.
+            @endif
+        </p>
     </div>
 
     <div class="score-card">
