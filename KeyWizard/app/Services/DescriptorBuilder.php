@@ -138,6 +138,26 @@ class DescriptorBuilder
             'label'  => $this->scoreLabel($score),
         ];
     }
+    private function scoreLabel(int $score): string
+    {
+        if ($score >= 90) {
+            return 'Excelente';
+        }
+
+        if ($score >= 70) {
+            return 'Alta';
+        }
+
+        if ($score >= 50) {
+            return 'Media';
+        }
+
+        if ($score >= 30) {
+            return 'Baja';
+        }
+
+        return 'Mínima';
+    }
     
     public function analyzeDescriptor(string $descriptor): array
     {
