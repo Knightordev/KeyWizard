@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="icon"
-      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧙‍♂️</text></svg>">
+    <link rel="icon" href="{{ asset('images/gorrito oficial.png') }}" type="image/png">
     <title>@yield('title', 'KeyWizard')</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('styles')
@@ -16,6 +15,7 @@
     <div class="navbar-brand">
         <a href="{{ route('home') }}" style="display:flex;align-items:center;gap:11px;text-decoration:none;">
             <!-- <div class="navbar-logo">KW</div> -->
+            <img src="{{ asset('images/gorrito oficial.png') }}" alt="" style="width:36px;height:36px;object-fit:contain;">
             <span class="navbar-name">Key<span>Wizard</span></span>
         </a>
     </div>
