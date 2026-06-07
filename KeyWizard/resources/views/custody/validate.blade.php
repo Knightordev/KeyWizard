@@ -66,7 +66,7 @@
     }
 
     .descriptor-textarea:focus { border-color: var(--purple); }
-    .descriptor-textarea::placeholder { color: var(--text-dim); }
+    .descriptor-textarea::placeholder { color: var(--text-dim); opacity: 0.45; }
 
     .validate-actions {
         display: flex;

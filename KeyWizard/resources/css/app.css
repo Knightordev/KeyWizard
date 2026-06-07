@@ -427,5 +427,10 @@ html, body {
     }
     body {
         background: #ffffff;
-    }
+        }
+
+    .xpub-input::placeholder {
+    color: var(--text-dim);
+    opacity: 0.45;
+ }
 }

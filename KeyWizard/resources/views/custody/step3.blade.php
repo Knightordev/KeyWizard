@@ -130,9 +130,8 @@
     }
 
     .xpub-input::placeholder {
-        color: var(--text-dim);
+        color: rgba(100, 85, 140, 0.3);
     }
-
     .info-box {
         background: var(--purple-dim);
         border: 1px solid var(--purple-border);
