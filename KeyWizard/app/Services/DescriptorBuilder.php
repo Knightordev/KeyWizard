@@ -418,31 +418,34 @@ class DescriptorBuilder
         return substr($hash, 0, 4) === $checksum;
     }
     public function deriveAddresses(array $xpubs, int $count = 3): array
-{
-    $addresses = [];
-
-    foreach ($xpubs as $xpub) {
-        $xpub = trim($xpub);
-        $pubKey = $this->xpubToCompressedPubKey($xpub, 0);
-        if ($pubKey) {
-            $addresses[] = $this->pubKeyToP2WPKH($pubKey);
+    {
+        if (!extension_loaded('gmp')) {
+            return [];
         }
-        if (count($addresses) >= $count) break;
-    }
 
-    // Rellenar con índices adicionales si solo hay 1 xpub
-    if (count($addresses) < $count && count($xpubs) === 1) {
-        $xpub = trim($xpubs[0]);
-        for ($i = 1; $i < $count; $i++) {
-            $pubKey = $this->xpubToCompressedPubKey($xpub, $i);
+        $addresses = [];
+
+        foreach ($xpubs as $xpub) {
+            $xpub   = trim($xpub);
+            $pubKey = $this->xpubToCompressedPubKey($xpub, 0);
             if ($pubKey) {
                 $addresses[] = $this->pubKeyToP2WPKH($pubKey);
             }
+            if (count($addresses) >= $count) break;
         }
-    }
 
-    return $addresses;
-}
+        if (count($addresses) < $count && count($xpubs) === 1) {
+            $xpub = trim($xpubs[0]);
+            for ($i = 1; $i < $count; $i++) {
+                $pubKey = $this->xpubToCompressedPubKey($xpub, $i);
+                if ($pubKey) {
+                    $addresses[] = $this->pubKeyToP2WPKH($pubKey);
+                }
+            }
+        }
+
+        return $addresses;
+    }
 
 private function xpubToCompressedPubKey(string $xpub, int $index): ?string
 {

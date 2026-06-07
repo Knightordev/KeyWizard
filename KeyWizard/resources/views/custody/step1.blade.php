@@ -230,9 +230,12 @@
                 <div class="option-emoji">⚡</div>
                 <div class="option-title">
                     Taproot
-                  <!--  <span style="font-family:'DM Mono',monospace;font-size:10px;background:rgba(240,165,0,0.15);color:#f0a500;padding:2px 8px;border-radius:99px;margin-left:8px;">BONUS</span> -->
+                    <span style="font-family:'DM Mono',monospace;font-size:10px;background:rgba(240,165,0,0.15);color:#f0a500;padding:2px 8px;border-radius:99px;margin-left:8px;">BONUS</span>
                 </div>
-                <div class="option-desc">El formato más moderno de Bitcoin. Mayor privacidad — las condiciones de gasto son invisibles on-chain. Requiere una clave interna adicional.</div>
+                <div class="option-desc">
+                    El formato más moderno de Bitcoin. Tus reglas de custodia son <strong>invisibles para cualquier observador</strong> — solo tú sabes cuántas llaves tienes. También tiene comisiones más bajas.
+                    <span style="display:block;margin-top:6px;font-size:11px;color:var(--text-dim);">💡 Ideal si valoras la privacidad. Requiere Sparrow 1.8 o superior.</span>
+                </div>
             </label>
         </div>
 

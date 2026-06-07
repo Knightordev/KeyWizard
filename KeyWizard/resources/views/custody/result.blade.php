@@ -680,27 +680,34 @@
             </div>
             @elseif($purpose === 'taproot')
             <div class="timelock-info" style="border-color:rgba(240,165,0,0.2);background:rgba(240,165,0,0.04);">
-                <div class="timelock-header" style="color:#f0a500;">⚡ Taproot — El formato más moderno de Bitcoin</div>
+                <div class="timelock-header" style="color:#f0a500;">⚡ Taproot — Privacidad máxima activada</div>
                 <div class="timelock-grid">
                     <div class="timelock-item">
-                        <div class="timelock-icon">🔒</div>
+                        <div class="timelock-icon">👁️</div>
                         <div>
-                            <div class="timelock-label">Privacidad máxima</div>
-                            <div class="timelock-desc">Las condiciones de gasto (multisig, timelocks) son invisibles on-chain. Solo se revela lo que se usa al gastar.</div>
+                            <div class="timelock-label">Nadie puede ver tus reglas</div>
+                            <div class="timelock-desc">En una bóveda normal, cualquiera puede ver en la blockchain cuántas llaves tienes. Con Taproot eso es invisible — solo se revela cuando gastas.</div>
                         </div>
                     </div>
                     <div class="timelock-item">
-                        <div class="timelock-icon">⚡</div>
+                        <div class="timelock-icon">💸</div>
                         <div>
-                            <div class="timelock-label">Comisiones menores</div>
-                            <div class="timelock-desc">Las transacciones Taproot son más pequeñas y baratas que las P2WSH tradicionales.</div>
+                            <div class="timelock-label">Comisiones más bajas</div>
+                            <div class="timelock-desc">Las transacciones Taproot ocupan menos espacio en la blockchain, por lo que pagas menos comisiones al mover tus fondos.</div>
                         </div>
                     </div>
                     <div class="timelock-item">
                         <div class="timelock-icon">🛠️</div>
                         <div>
-                            <div class="timelock-label">Compatible con Sparrow 1.8+</div>
-                            <div class="timelock-desc">Importa el descriptor en Sparrow Wallet versión 1.8 o superior. Asegúrate de tener la versión actualizada.</div>
+                            <div class="timelock-label">Cómo importarlo</div>
+                            <div class="timelock-desc">Abre Sparrow Wallet versión 1.8 o superior → File → New Wallet → Output Descriptor → pega tu descriptor → Apply.</div>
+                        </div>
+                    </div>
+                    <div class="timelock-item">
+                        <div class="timelock-icon">⚠️</div>
+                        <div>
+                            <div class="timelock-label">Guarda el descriptor</div>
+                            <div class="timelock-desc">Sin el descriptor no puedes reconstruir tu bóveda. Descárgalo, guarda el QR y anota todas tus xpubs en papel.</div>
                         </div>
                     </div>
                 </div>

@@ -823,8 +823,8 @@
                 <div class="taproot-internal-header">
                     <span>⚡</span>
                     <div>
-                        <div class="taproot-internal-title">Clave interna Taproot</div>
-                        <div class="taproot-internal-sub">Taproot requiere una clave interna adicional que actúa como raíz del árbol de scripts.</div>
+                        <div class="taproot-internal-title">Clave raíz de Taproot</div>
+                        <div class="taproot-internal-sub">Taproot necesita una clave "raíz" que actúa como el tronco del árbol — de ella cuelgan todas tus reglas de gasto. Piénsalo como la llave maestra que organiza todo.</div>
                     </div>
                 </div>
                 <input
@@ -832,13 +832,14 @@
                     name="taproot_internal"
                     class="xpub-meta-input"
                     style="width:100%;padding:10px 14px;font-size:12px;margin-top:0.75rem;"
-                    placeholder="xpub... (clave interna, puede ser la misma que tu llave principal)"
+                    placeholder="xpub... (tu clave raíz)"
                     spellcheck="false"
                     autocomplete="off"
                     value="{{ old('taproot_internal') }}"
                 >
-                <div style="font-size:12px;color:var(--text-dim);margin-top:6px;font-family:'DM Mono',monospace;">
-                    Puedes usar la misma xpub de tu dispositivo principal si no tienes una dedicada.
+                <div style="font-size:12px;color:var(--text-dim);margin-top:8px;font-family:'DM Mono',monospace;line-height:1.6;">
+                    ✅ Puedes usar la misma xpub de tu dispositivo principal — es lo más común.<br>
+                    📁 O importa tu archivo JSON arriba y se rellenará automáticamente.
                 </div>
             </div>
             @endif
