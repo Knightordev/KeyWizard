@@ -217,22 +217,31 @@ class CustodyController extends Controller
     }
 
     public function result()
-    {
-        if (!session('custody.descriptor')) {
-            return redirect()->route('wizard.step1');
-        }
-
-        $data = [
-            'descriptor'  => session('custody.descriptor'),
-            'descripcion' => session('custody.descripcion'),
-            'score'       => session('custody.score'),
-            'purpose'     => session('custody.purpose'),
-            'threshold'   => session('custody.threshold'),
-            'total_keys'  => session('custody.total_keys'),
-        ];
-
-        return view('custody.result', compact('data'));
+{
+    if (!session('custody.descriptor')) {
+        return redirect()->route('wizard.step1');
     }
+
+    $builder   = new \App\Services\DescriptorBuilder();
+    $xpubs     = session('custody.xpubs', []);
+    $addresses = [];
+
+    if (!empty($xpubs)) {
+        $addresses = $builder->deriveAddresses($xpubs, 3);
+    }
+
+    $data = [
+        'descriptor'  => session('custody.descriptor'),
+        'descripcion' => session('custody.descripcion'),
+        'score'       => session('custody.score'),
+        'purpose'     => session('custody.purpose'),
+        'threshold'   => session('custody.threshold'),
+        'total_keys'  => session('custody.total_keys'),
+        'addresses'   => $addresses,
+    ];
+
+    return view('custody.result', compact('data'));
+}
 
     public function reset()
     {
