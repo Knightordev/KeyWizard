@@ -543,7 +543,7 @@
                 <div class="flashcard-front">
                     <span class="card-tag">seguridad</span>
                     <div class="card-front-content">
-                        <div class="card-emoji">🔑</div>
+                        <div class="card-emoji"><img src="{{ asset('images/varita.png') }}" style="width:40px;height:40px;object-fit:contain;"></div>
                         <div class="card-term">Clave pública (xpub)</div>
                         <div class="card-hint">click para voltear</div>
                     </div>
@@ -563,7 +563,11 @@
                 <div class="flashcard-front">
                     <span class="card-tag">concepto</span>
                     <div class="card-front-content">
-                        <div class="card-emoji">🔑🔑🔑</div>
+                        <div class="card-emoji">
+                        <img src="{{ asset('images/varita.png') }}" style="width:32px;height:32px;object-fit:contain;">
+                        <img src="{{ asset('images/varita.png') }}" style="width:32px;height:32px;object-fit:contain;">
+                        <img src="{{ asset('images/varita.png') }}" style="width:32px;height:32px;object-fit:contain;">
+                    </div>
                         <div class="card-term">Multifirma</div>
                         <div class="card-hint">click para voltear</div>
                     </div>

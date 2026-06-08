@@ -473,7 +473,7 @@
     }
 
     .xpub-meta-input::placeholder {
-        color: var(--text-dim);
+        color: rgba(100, 85, 140, 0.3);
     }
 
     .import-file-btn {
