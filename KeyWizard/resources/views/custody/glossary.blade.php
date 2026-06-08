@@ -927,6 +927,7 @@
 @endsection
 
 @push('scripts')
+<script>const ARCANUS_IMG = "{{ asset('images/arcanus.png') }}";</script>
 <script>
     const filterBtns = document.querySelectorAll('.filter-btn');
     const cards      = document.querySelectorAll('.flashcard');
@@ -1014,7 +1015,7 @@
         msg.className = 'drawer-msg ' + role;
         const avatar = document.createElement('div');
         avatar.className = 'drawer-avatar';
-        avatar.textContent = role === 'ai' ? '🤖' : '👤';
+        avatar.innerHTML = role === 'ai' ? `<img src="${ARCANUS_IMG}" style="width:24px;height:24px;object-fit:contain;">` : '👤';
         const bubble = document.createElement('div');
         bubble.className = 'drawer-bubble';
         bubble.textContent = text;

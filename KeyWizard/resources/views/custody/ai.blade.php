@@ -425,6 +425,7 @@
 @endsection
 
 @push('scripts')
+<script>const ARCANUS_IMG = "{{ asset('images/arcanus.png') }}";</script>
 <script>
     const messagesEl  = document.getElementById('chat-messages');
     const inputEl     = document.getElementById('chat-input');
@@ -455,7 +456,7 @@
 
         const avatar  = document.createElement('div');
         avatar.className = 'chat-avatar';
-        avatar.textContent = role === 'ai' ? '🤖' : '👤';
+        avatar.innerHTML = role === 'ai' ? `<img src="${ARCANUS_IMG}" style="width:24px;height:24px;object-fit:contain;">` : '👤';
 
         const bubble  = document.createElement('div');
         bubble.className = 'chat-bubble';
