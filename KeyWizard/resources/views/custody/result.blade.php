@@ -131,6 +131,21 @@
         line-height: 1.6;
     }
 
+    .validation-note {
+        margin-top: 1rem;
+        padding: 0.85rem 1rem;
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--border-md);
+        background: var(--bg);
+        font-size: 13px;
+        color: var(--text-muted);
+        line-height: 1.6;
+    }
+
+    .validation-note strong {
+        color: var(--text);
+    }
+
     .score-card {
         background: var(--bg-card);
         border: 1px solid var(--border-md);
@@ -622,6 +637,19 @@
         <div class="descriptor-body">
             <div class="descriptor-text" id="descriptor-value">{{ $data['descriptor'] }}</div>
             <div class="descriptor-desc">{{ $data['descripcion'] }}</div>
+            @if(!empty($data['validation']))
+                <div class="validation-note">
+                    @if(($data['validation']['source'] ?? '') === 'bitcoin_core')
+                        <strong>Validado con Bitcoin Core.</strong>
+                        @if(!empty($data['validation']['checksum']))
+                            Checksum oficial: {{ $data['validation']['checksum'] }}.
+                        @endif
+                    @else
+                        <strong>Validacion local.</strong>
+                        {{ $data['validation']['warnings'][0] ?? 'Bitcoin Core no esta activado.' }}
+                    @endif
+                </div>
+            @endif
             @php $purpose = session('custody.purpose'); @endphp
 
             @if($purpose === 'inheritance')

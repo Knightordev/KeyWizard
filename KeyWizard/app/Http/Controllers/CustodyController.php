@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Services\DescriptorBuilder;
+use App\Services\DescriptorValidator;
 
 class CustodyController extends Controller
 {
@@ -199,9 +200,11 @@ class CustodyController extends Controller
             $descripcion = $builder->describe($threshold, $totalKeys);
         }
 
-        if (!$builder->selfValidate($descriptor)) {
+        $validation = (new DescriptorValidator($builder))->validate($descriptor);
+
+        if (!$validation['valid']) {
             return back()->withErrors([
-                'descriptor' => 'Error interno al generar el descriptor. Verifica tus claves e intenta de nuevo.'
+                'descriptor' => $validation['errors'][0] ?? 'Error interno al generar el descriptor. Verifica tus claves e intenta de nuevo.'
             ]);
         }
 
@@ -211,6 +214,7 @@ class CustodyController extends Controller
             'custody.descriptor'  => $descriptor,
             'custody.descripcion' => $descripcion,
             'custody.score'       => $score,
+            'custody.validation'  => $validation,
         ]);
 
         return redirect()->route('wizard.result');
@@ -238,6 +242,7 @@ class CustodyController extends Controller
         'threshold'   => session('custody.threshold'),
         'total_keys'  => session('custody.total_keys'),
         'addresses'   => $addresses,
+        'validation'  => session('custody.validation'),
     ];
 
     return view('custody.result', compact('data'));
@@ -357,6 +362,12 @@ class CustodyController extends Controller
 
         $builder = new DescriptorBuilder();
         $result  = $builder->analyzeDescriptor($request->descriptor);
+        $result['descriptor_validation'] = (new DescriptorValidator($builder))->validate($request->descriptor);
+        $result['valid'] = $result['valid'] && $result['descriptor_validation']['valid'];
+        $result['errors'] = array_values(array_unique(array_merge(
+            $result['errors'],
+            $result['descriptor_validation']['errors']
+        )));
 
         return response()->json($result);
     }
