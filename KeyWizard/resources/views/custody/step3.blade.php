@@ -584,7 +584,7 @@
 
     <div class="xpub-explainer">
         <div class="explainer-header">
-            <div class="explainer-icon">🔑</div>
+            <div class="explainer-icon"><img src="{{ asset('images/varita.png') }}" style="width:40px;height:40px;object-fit:contain;"></div>
             <div>
                 <div class="explainer-title">¿Qué es una clave pública (xpub)?</div>
                 <div class="explainer-subtitle">Lee esto antes de continuar — son 30 segundos</div>

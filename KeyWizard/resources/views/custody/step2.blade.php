@@ -319,8 +319,7 @@
             key.className =
                 'lock-key' + (i <= threshold ? ' active' : '');
 
-            key.textContent = '🔑';
-
+            key.innerHTML = '<img src="/images/varita.png" style="width:28px;height:28px;object-fit:contain;">';
             lockVisual.appendChild(key);
         }
     }

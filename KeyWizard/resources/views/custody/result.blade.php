@@ -875,7 +875,7 @@
                 </div>
             </div>
             <div class="recovery-item critical">
-                <div class="recovery-item-icon">🔑</div>
+                <div class="recovery-item-icon"><img src="{{ asset('images/varita.png') }}" style="width:40px;height:40px;object-fit:contain;"></div>
                 <div>
                     <div class="recovery-item-label">Todas las xpubs</div>
                     <div class="recovery-item-desc">Necesitas todas las claves públicas para reconstruir el descriptor si lo pierdes.</div>

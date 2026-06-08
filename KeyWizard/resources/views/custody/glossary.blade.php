@@ -607,7 +607,7 @@
                 <div class="flashcard-front">
                     <span class="card-tag">concepto</span>
                     <div class="card-front-content">
-                        <div class="card-emoji">🏛️</div>
+                        <div class="card-emoji"><img src="{{ asset('images/castillo.png') }}" style="width:40px;height:40px;object-fit:contain;"></div>
                         <div class="card-term">Self-custody</div>
                         <div class="card-hint">click para voltear</div>
                     </div>
@@ -707,7 +707,7 @@
                 <div class="flashcard-front">
                     <span class="card-tag">técnico</span>
                     <div class="card-front-content">
-                        <div class="card-emoji">📜</div>
+                        <div class="card-emoji"><img src="{{ asset('images/pergamino.png') }}" style="width:40px;height:40px;object-fit:contain;"></div>
                         <div class="card-term">Miniscript</div>
                         <div class="card-hint">click para voltear</div>
                     </div>
@@ -806,7 +806,7 @@
                 <div class="flashcard-front">
                     <span class="card-tag">técnico</span>
                     <div class="card-front-content">
-                        <div class="card-emoji">📜</div>
+                        <div class="card-emoji"><img src="{{ asset('images/pergamino.png') }}" style="width:40px;height:40px;object-fit:contain;"></div>
                         <div class="card-term">Miniscript</div>
                         <div class="card-hint">click para voltear</div>
                     </div>

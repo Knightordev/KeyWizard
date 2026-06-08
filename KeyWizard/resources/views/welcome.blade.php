@@ -410,7 +410,7 @@
 
         <div class="step-card">
             <div class="step-num">02</div>
-            <div class="step-emoji">🔑</div>
+            <div class="step-emoji"><img src="{{ asset('images/varita.png') }}" style="width:40px;height:40px;object-fit:contain;"></div>
             <h3>Define cuántas firmas</h3>
             <p>Decide cuántas llaves crear y cuántas necesitas para mover tus fondos.</p>
         </div>
