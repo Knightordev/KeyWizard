@@ -389,7 +389,7 @@
             Crear mi bóveda →
         </a>
         <a href="{{ route('ai.index') }}" class="btn btn-ghost btn-lg">
-            🤖 Consultor IA
+            <img src="{{ asset('images/arcanus.png') }}" style="width:26px;height:26px;object-fit:contain;vertical-align:middle;"> Consultor IA
         </a>
         <a href="{{ route('glossary') }}" class="btn btn-ghost btn-lg">
             ¿Qué es esto?

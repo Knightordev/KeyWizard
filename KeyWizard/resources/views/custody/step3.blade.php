@@ -601,7 +601,7 @@
             </div>
             <div class="analogy-divider">≠</div>
             <div class="analogy-item">
-                <div class="analogy-icon">🔒</div>
+                <div class="analogy-icon"><img src="{{ asset('images/candado1.png') }}" style="width:40px;height:40px;object-fit:contain;"></div>
                 <div>
                     <div class="analogy-label">Clave privada</div>
                     <div class="analogy-desc">Es tu <strong>contraseña secreta</strong>. Nunca la compartas. KeyWizard jamás te la pedirá.</div>

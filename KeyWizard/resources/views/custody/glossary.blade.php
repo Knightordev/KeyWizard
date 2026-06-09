@@ -523,7 +523,7 @@
                 <div class="flashcard-front">
                     <span class="card-tag">seguridad</span>
                     <div class="card-front-content">
-                        <div class="card-emoji">🔒</div>
+                        <div class="card-emoji"><img src="{{ asset('images/candado1.png') }}" style="width:40px;height:40px;object-fit:contain;"></div>
                         <div class="card-term">Clave privada</div>
                         <div class="card-hint">click para voltear</div>
                     </div>
@@ -607,7 +607,7 @@
                 <div class="flashcard-front">
                     <span class="card-tag">concepto</span>
                     <div class="card-front-content">
-                        <div class="card-emoji"><img src="{{ asset('images/castillo.png') }}" style="width:40px;height:40px;object-fit:contain;"></div>
+                        <div class="card-emoji"><img src="{{ asset('images/castillo.png') }}" style="width:60px;height:60px;object-fit:contain;"></div>
                         <div class="card-term">Self-custody</div>
                         <div class="card-hint">click para voltear</div>
                     </div>
@@ -667,7 +667,7 @@
                 <div class="flashcard-front">
                     <span class="card-tag">software</span>
                     <div class="card-front-content">
-                        <div class="card-emoji">🐦</div>
+                        <div class="card-emoji"><img src="{{ asset('images/sparrow.png') }}" style="width:40px;height:40px;object-fit:contain;"></div>
                         <div class="card-term">Sparrow Wallet</div>
                         <div class="card-hint">click para voltear</div>
                     </div>
@@ -687,7 +687,7 @@
                 <div class="flashcard-front">
                     <span class="card-tag">técnico</span>
                     <div class="card-front-content">
-                        <div class="card-emoji">⏳</div>
+                        <div class="card-emoji"><img src="{{ asset('images/reloj.png') }}" style="width:50px;height:50px;object-fit:contain;"></div>
                         <div class="card-term">Timelock</div>
                         <div class="card-hint">click para voltear</div>
                     </div>
@@ -727,7 +727,7 @@
                 <div class="flashcard-front">
                     <span class="card-tag">concepto</span>
                     <div class="card-front-content">
-                        <div class="card-emoji">✍️</div>
+                        <div class="card-emoji"><img src="{{ asset('images/mano.png') }}" style="width:50px;height:50px;object-fit:contain;"></div>
                         <div class="card-term">Firma / Threshold</div>
                         <div class="card-hint">click para voltear</div>
                     </div>
@@ -766,7 +766,7 @@
                 <div class="flashcard-front">
                     <span class="card-tag">técnico</span>
                     <div class="card-front-content">
-                        <div class="card-emoji">⏳</div>
+                        <div class="card-emoji"><div class="card-emoji"><img src="{{ asset('images/reloj.png') }}" style="width:50px;height:50px;object-fit:contain;"></div></div>
                         <div class="card-term">Timelock relativo</div>
                         <div class="card-hint">click para voltear</div>
                     </div>
@@ -826,7 +826,7 @@
                 <div class="flashcard-front">
                     <span class="card-tag">técnico</span>
                     <div class="card-front-content">
-                        <div class="card-emoji">✍️</div>
+                        <div class="card-emoji"><img src="{{ asset('images/mano.png') }}" style="width:50px;height:50px;object-fit:contain;"></div>
                         <div class="card-term">PSBT</div>
                         <div class="card-hint">click para voltear</div>
                     </div>

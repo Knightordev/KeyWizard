@@ -654,7 +654,7 @@
 
             @if($purpose === 'inheritance')
             <div class="timelock-info">
-                <div class="timelock-header">⏳ Timelock Relativo — Herencia</div>
+                <div class="timelock-header"><div class="card-emoji"><img src="{{ asset('images/reloj.png') }}" style="width:40px;height:40px;object-fit:contain;"></div> Timelock Relativo — Herencia</div>
                 <div class="timelock-grid">
                     <div class="timelock-item">
                         <div class="timelock-icon">👤</div>
@@ -684,7 +684,7 @@
                 <div class="timelock-header">📅 Timelock Absoluto — Ahorro bloqueado</div>
                 <div class="timelock-grid">
                     <div class="timelock-item">
-                        <div class="timelock-icon">🔒</div>
+                        <div class="timelock-icon"><img src="{{ asset('images/candado1.png') }}" style="width:40px;height:40px;object-fit:contain;"></div>
                         <div>
                             <div class="timelock-label">Fondos bloqueados hasta el bloque {{ session('custody.lock_block', 850000) }}</div>
                             <div class="timelock-desc">Nadie puede mover estos fondos antes de que la red Bitcoin alcance ese bloque. Ni tú.</div>

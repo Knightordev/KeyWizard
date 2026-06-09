@@ -22,7 +22,7 @@
     <div class="navbar-links" id="navbar-links">
         <a href="{{ route('validate') }}" class="nav-link">Validar</a>
         <a href="{{ route('glossary') }}" class="nav-link">Glosario</a>
-        <a href="{{ route('ai.index') }}" class="nav-link">🤖 Consultor IA</a>
+        <a href="{{ route('ai.index') }}" class="nav-link"><img src="{{ asset('images/arcanus.png') }}" style="width:20px;height:20px;object-fit:contain;vertical-align:middle;"> Consultor IA</a>
         <a href="{{ route('wizard.step1') }}" class="nav-cta">Crear bóveda →</a>
     </div>
     <button class="hamburger" id="hamburger" aria-label="Menú">
