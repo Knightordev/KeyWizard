@@ -365,13 +365,13 @@
     <div class="chat-box">
         <div class="chat-messages" id="chat-messages">
             <div class="chat-msg ai">
-                <div class="chat-avatar">🤖</div>
+                <div class="chat-avatar"><img src="{{ asset('images/arcanus.png') }}" style="width:24px;height:24px;object-fit:contain;"></div>
                 <div class="chat-bubble">
                     Hola, soy tu consultor de custodia Bitcoin. Voy a hacerte unas preguntas simples para recomendarte la mejor configuración. ¿Para qué usarás tu bóveda? Por ejemplo: uso personal, familiar, negocio, ahorro a largo plazo o herencia.
                 </div>
             </div>
             <div class="chat-msg ai" id="typing" style="display:none;">
-                <div class="chat-avatar">🤖</div>
+                <div class="chat-avatar"><img src="{{ asset('images/arcanus.png') }}" style="width:24px;height:24px;object-fit:contain;"></div>
                 <div class="typing-indicator" style="display:flex;">
                     <div class="typing-dot"></div>
                     <div class="typing-dot"></div>
@@ -456,7 +456,7 @@
 
         const avatar  = document.createElement('div');
         avatar.className = 'chat-avatar';
-        avatar.innerHTML = role === 'ai' ? `<img src="${ARCANUS_IMG}" style="width:24px;height:24px;object-fit:contain;">` : '👤';
+        avatar.textContent = role === 'ai' ? '🤖' : '👤';
 
         const bubble  = document.createElement('div');
         bubble.className = 'chat-bubble';

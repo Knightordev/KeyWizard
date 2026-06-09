@@ -511,7 +511,7 @@
                 <div class="flashcard-back">
                     <div class="card-back-def">Moneda digital descentralizada creada en 2009. No existe un banco ni gobierno que la controle — las reglas las define el código y los usuarios de la red. Si tienes las llaves, tienes el dinero.</div>
                     <div class="card-back-actions">
-                        <button class="card-ask-btn">🤖 Explícame más</button>
+                        <button class="card-ask-btn"><img src="{{ asset('images/arcanus.png') }}" style="width:16px;height:16px;object-fit:contain;vertical-align:middle;"> Explícame más</button>
                         <button class="card-flip-back">↩ Voltear</button>
                     </div>
                 </div>
@@ -531,7 +531,7 @@
                 <div class="flashcard-back">
                     <div class="card-back-def">El secreto más importante de tu wallet. Es un número enorme que te permite firmar transacciones y demostrar que eres el dueño de los fondos. Quien tenga tu clave privada tiene tu Bitcoin. Jamás la compartas.</div>
                     <div class="card-back-actions">
-                        <button class="card-ask-btn">🤖 Explícame más</button>
+                        <button class="card-ask-btn"><img src="{{ asset('images/arcanus.png') }}" style="width:16px;height:16px;object-fit:contain;vertical-align:middle;"> Explícame más</button>
                         <button class="card-flip-back">↩ Voltear</button>
                     </div>
                 </div>
@@ -551,7 +551,7 @@
                 <div class="flashcard-back">
                     <div class="card-back-def">La parte pública de tu llave. Se puede compartir sin riesgo y permite generar direcciones de recepción. No permite gastar fondos — solo verlos y recibirlos. Es como tu número de cuenta bancaria.</div>
                     <div class="card-back-actions">
-                        <button class="card-ask-btn">🤖 Explícame más</button>
+                        <button class="card-ask-btn"><img src="{{ asset('images/arcanus.png') }}" style="width:16px;height:16px;object-fit:contain;vertical-align:middle;"> Explícame más</button>
                         <button class="card-flip-back">↩ Voltear</button>
                     </div>
                 </div>
@@ -575,7 +575,7 @@
                 <div class="flashcard-back">
                     <div class="card-back-def">Esquema donde se necesita más de una firma para aprobar una transacción. Se escribe como m de n — por ejemplo 2 de 3 significa que de 3 llaves existentes, cualquier combinación de 2 puede firmar. Elimina el punto único de fallo.</div>
                     <div class="card-back-actions">
-                        <button class="card-ask-btn">🤖 Explícame más</button>
+                        <button class="card-ask-btn"><img src="{{ asset('images/arcanus.png') }}" style="width:16px;height:16px;object-fit:contain;vertical-align:middle;"> Explícame más</button>
                         <button class="card-flip-back">↩ Voltear</button>
                     </div>
                 </div>
@@ -595,7 +595,7 @@
                 <div class="flashcard-back">
                     <div class="card-back-def">Texto que describe exactamente las reglas de tu wallet: qué claves la controlan y cuántas firmas se necesitan. Es el formato estándar que entienden Sparrow, Liana y otras wallets modernas. KeyWizard genera este texto por ti.</div>
                     <div class="card-back-actions">
-                        <button class="card-ask-btn">🤖 Explícame más</button>
+                        <button class="card-ask-btn"><img src="{{ asset('images/arcanus.png') }}" style="width:16px;height:16px;object-fit:contain;vertical-align:middle;"> Explícame más</button>
                         <button class="card-flip-back">↩ Voltear</button>
                     </div>
                 </div>
@@ -615,7 +615,7 @@
                 <div class="flashcard-back">
                     <div class="card-back-def">Guardar tus propias llaves sin depender de un exchange o tercero. Not your keys, not your coins — si no tienes las llaves, técnicamente el Bitcoin no es tuyo.</div>
                     <div class="card-back-actions">
-                        <button class="card-ask-btn">🤖 Explícame más</button>
+                        <button class="card-ask-btn"><img src="{{ asset('images/arcanus.png') }}" style="width:16px;height:16px;object-fit:contain;vertical-align:middle;"> Explícame más</button>
                         <button class="card-flip-back">↩ Voltear</button>
                     </div>
                 </div>
@@ -635,7 +635,7 @@
                 <div class="flashcard-back">
                     <div class="card-back-def">Lista de 12 o 24 palabras que representa tu clave maestra. Con estas palabras puedes recuperar toda tu wallet en cualquier dispositivo compatible. Escríbela en papel, nunca en digital.</div>
                     <div class="card-back-actions">
-                        <button class="card-ask-btn">🤖 Explícame más</button>
+                        <button class="card-ask-btn"><img src="{{ asset('images/arcanus.png') }}" style="width:16px;height:16px;object-fit:contain;vertical-align:middle;"> Explícame más</button>
                         <button class="card-flip-back">↩ Voltear</button>
                     </div>
                 </div>
@@ -655,7 +655,7 @@
                 <div class="flashcard-back">
                     <div class="card-back-def">Dispositivo físico parecido a una USB que guarda tu clave privada completamente offline. Las marcas más conocidas son Ledger, Trezor y Coldcard. Tu clave nunca sale del dispositivo.</div>
                     <div class="card-back-actions">
-                        <button class="card-ask-btn">🤖 Explícame más</button>
+                        <button class="card-ask-btn"><img src="{{ asset('images/arcanus.png') }}" style="width:16px;height:16px;object-fit:contain;vertical-align:middle;"> Explícame más</button>
                         <button class="card-flip-back">↩ Voltear</button>
                     </div>
                 </div>
@@ -675,7 +675,7 @@
                 <div class="flashcard-back">
                     <div class="card-back-def">Wallet de escritorio para Bitcoin con soporte completo de descriptores y multisig. Es una de las opciones más recomendadas para autocustodia avanzada. KeyWizard genera descriptores 100% compatibles con Sparrow.</div>
                     <div class="card-back-actions">
-                        <button class="card-ask-btn">🤖 Explícame más</button>
+                        <button class="card-ask-btn"><img src="{{ asset('images/arcanus.png') }}" style="width:16px;height:16px;object-fit:contain;vertical-align:middle;"> Explícame más</button>
                         <button class="card-flip-back">↩ Voltear</button>
                     </div>
                 </div>
@@ -695,7 +695,7 @@
                 <div class="flashcard-back">
                     <div class="card-back-def">Condición que bloquea fondos hasta que pase cierto tiempo. Se usa en wallets de herencia: si no muevo mis fondos en 1 año, mi familia puede recuperarlos con su propia llave.</div>
                     <div class="card-back-actions">
-                        <button class="card-ask-btn">🤖 Explícame más</button>
+                        <button class="card-ask-btn"> <img src="{{ asset('images/arcanus.png') }}" style="width:16px;height:16px;object-fit:contain;vertical-align:middle;">Explícame más</button>
                         <button class="card-flip-back">↩ Voltear</button>
                     </div>
                 </div>
@@ -715,7 +715,7 @@
                 <div class="flashcard-back">
                     <div class="card-back-def">Lenguaje estructurado para escribir políticas de gasto en Bitcoin. Permite condiciones más complejas que el multisig simple, como firma A o firma B después de 1 año.</div>
                     <div class="card-back-actions">
-                        <button class="card-ask-btn">🤖 Explícame más</button>
+                        <button class="card-ask-btn"><img src="{{ asset('images/arcanus.png') }}" style="width:16px;height:16px;object-fit:contain;vertical-align:middle;"> Explícame más</button>
                         <button class="card-flip-back">↩ Voltear</button>
                     </div>
                 </div>
@@ -735,7 +735,7 @@
                 <div class="flashcard-back">
                     <div class="card-back-def">Firmar una transacción significa aprobarla con tu clave privada. El threshold es cuántas firmas se necesitan para que sea válida. En un esquema 2 de 3, necesitas exactamente 2 aprobaciones.</div>
                     <div class="card-back-actions">
-                        <button class="card-ask-btn">🤖 Explícame más</button>
+                        <button class="card-ask-btn"><img src="{{ asset('images/arcanus.png') }}" style="width:16px;height:16px;object-fit:contain;vertical-align:middle;"> Explícame más</button>
                         <button class="card-flip-back">↩ Voltear</button>
                     </div>
                 </div>
@@ -754,7 +754,7 @@
                 <div class="flashcard-back">
                     <div class="card-back-def">El formato más moderno de Bitcoin. Las condiciones de gasto son invisibles on-chain — máxima privacidad y comisiones menores. Compatible con Sparrow 1.8+.</div>
                     <div class="card-back-actions">
-                        <button class="card-ask-btn">🤖 Explícame más</button>
+                        <button class="card-ask-btn"><img src="{{ asset('images/arcanus.png') }}" style="width:16px;height:16px;object-fit:contain;vertical-align:middle;"> Explícame más</button>
                         <button class="card-flip-back">↩ Voltear</button>
                     </div>
                 </div>
@@ -774,7 +774,7 @@
                 <div class="flashcard-back">
                     <div class="card-back-def">Bloquea fondos por N bloques desde la última actividad. older(52560) ≈ 1 año. Si no mueves tus fondos en ese tiempo, tu heredero puede acceder.</div>
                     <div class="card-back-actions">
-                        <button class="card-ask-btn">🤖 Explícame más</button>
+                        <button class="card-ask-btn"><img src="{{ asset('images/arcanus.png') }}" style="width:16px;height:16px;object-fit:contain;vertical-align:middle;"> Explícame más</button>
                         <button class="card-flip-back">↩ Voltear</button>
                     </div>
                 </div>
@@ -794,27 +794,7 @@
                 <div class="flashcard-back">
                     <div class="card-back-def">Bloquea fondos hasta un bloque específico de Bitcoin. Nadie puede moverlos antes — ni tú. Ideal para ahorro con fecha objetivo. Es irreversible.</div>
                     <div class="card-back-actions">
-                        <button class="card-ask-btn">🤖 Explícame más</button>
-                        <button class="card-flip-back">↩ Voltear</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="flashcard" data-tag="técnico" data-term="Miniscript" data-def="Lenguaje estructurado para escribir políticas de gasto complejas en Bitcoin. Permite combinar multisig con timelocks: firma A o (firma B después de 1 año). KeyWizard usa Miniscript para generar los descriptores de herencia y ahorro bloqueado mediante andor().">
-            <div class="flashcard-inner">
-                <div class="flashcard-front">
-                    <span class="card-tag">técnico</span>
-                    <div class="card-front-content">
-                        <div class="card-emoji"><img src="{{ asset('images/pergamino.png') }}" style="width:40px;height:40px;object-fit:contain;"></div>
-                        <div class="card-term">Miniscript</div>
-                        <div class="card-hint">click para voltear</div>
-                    </div>
-                </div>
-                <div class="flashcard-back">
-                    <div class="card-back-def">Lenguaje para políticas de gasto complejas. Combina multisig con timelocks. KeyWizard lo usa en herencia y ahorro bloqueado con andor().</div>
-                    <div class="card-back-actions">
-                        <button class="card-ask-btn">🤖 Explícame más</button>
+                        <button class="card-ask-btn"><img src="{{ asset('images/arcanus.png') }}" style="width:16px;height:16px;object-fit:contain;vertical-align:middle;"> Explícame más</button>
                         <button class="card-flip-back">↩ Voltear</button>
                     </div>
                 </div>
@@ -834,7 +814,7 @@
                 <div class="flashcard-back">
                     <div class="card-back-def">Recuperar acceso a tu bóveda si pierdes un dispositivo. En multisig puedes usar las llaves restantes. Guarda siempre el descriptor y las xpubs.</div>
                     <div class="card-back-actions">
-                        <button class="card-ask-btn">🤖 Explícame más</button>
+                        <button class="card-ask-btn"><img src="{{ asset('images/arcanus.png') }}" style="width:16px;height:16px;object-fit:contain;vertical-align:middle;"> Explícame más</button>
                         <button class="card-flip-back">↩ Voltear</button>
                     </div>
                 </div>
@@ -854,7 +834,7 @@
                 <div class="flashcard-back">
                     <div class="card-back-def">Transacción parcialmente firmada. En multisig cada firmante agrega su firma sin estar conectados simultáneamente. Sparrow y los hardware wallets lo usan para firmar de forma segura.</div>
                     <div class="card-back-actions">
-                        <button class="card-ask-btn">🤖 Explícame más</button>
+                        <button class="card-ask-btn"><img src="{{ asset('images/arcanus.png') }}" style="width:16px;height:16px;object-fit:contain;vertical-align:middle;"> Explícame más</button>
                         <button class="card-flip-back">↩ Voltear</button>
                     </div>
                 </div>
@@ -874,7 +854,7 @@
                 <div class="flashcard-back">
                     <div class="card-back-def">Wallet especializada en timelocks y recuperación. Compatible con los descriptores de herencia de KeyWizard. Automatiza la renovación del timelock anual.</div>
                     <div class="card-back-actions">
-                        <button class="card-ask-btn">🤖 Explícame más</button>
+                        <button class="card-ask-btn"><img src="{{ asset('images/arcanus.png') }}" style="width:16px;height:16px;object-fit:contain;vertical-align:middle;"> Explícame más</button>
                         <button class="card-flip-back">↩ Voltear</button>
                     </div>
                 </div>
