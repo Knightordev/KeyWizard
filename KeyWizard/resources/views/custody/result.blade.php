@@ -671,7 +671,7 @@
                         </div>
                     </div>
                     <div class="timelock-item">
-                        <div class="timelock-icon">🔄</div>
+                        <div class="timelock-icon"><img src="{{ asset('images/recovery.png') }}" style="width:40px;height:40px;object-fit:contain;"></div> 
                         <div>
                             <div class="timelock-label">Para renovar el timelock</div>
                             <div class="timelock-desc">Mueve una cantidad pequeña cada año para reiniciar el contador. Liana automatiza esto.</div>
@@ -865,7 +865,7 @@
         </div>
     </div>
     <div class="recovery-card">
-        <div class="recovery-title">🔄 Guarda esto para poder recuperar tu bóveda</div>
+        <div class="recovery-title"><img src="{{ asset('images/recovery.png') }}" style="width:18px;height:18px;object-fit:contain;vertical-align:middle;"> Guarda esto para poder recuperar tu bóveda</div>
         <div class="recovery-grid">
             <div class="recovery-item critical">
                 <div class="recovery-item-icon">📄</div>
